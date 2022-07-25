@@ -1,10 +1,14 @@
+/*
+ * @Author: huang
+ * @Date: 2022-07-25 19:34:28
+ * @Description: 用户表
+ */
+
 const { DataTypes } = require('sequelize');
-
 const seq = require('../db/seq');
-
 const User = seq.define('tb_user', {
   name: {
-    type: DataTypes.STRING,
+    type: DataTypes.STRING(20),
     allowNull: false,
     unique: true,
     comment: '用户名, 唯一',
@@ -36,27 +40,12 @@ const User = seq.define('tb_user', {
     defaultValue: 0,
     comment: '是否禁止发言 0-可以发言, 1-禁止发言'
   },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    get () {
-      return moment(this.getDataValue('createdAt')).format('YYYY-MM-DD HH:mm:ss');
-    }
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    get () {
-      return moment(this.getDataValue('updatedAt')).format('YYYY-MM-DD HH:mm:ss');
-    }
-  }
 },
   {
-    freezeTableName: true, //创建的表名不会加复数
+    freezeTableName: true, 
   }
 );
-// 执行：node src/model/user.model.js 或者 nodemon刷新时执行
-// User.sync({ alter: true })
-
+// node src/model/user.model.js
+User.sync({ alter: true })
 
 module.exports = User;
