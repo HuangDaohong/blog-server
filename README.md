@@ -1,2 +1,2 @@
 # blog-server
-博客服务端
+博客Admin服务端
