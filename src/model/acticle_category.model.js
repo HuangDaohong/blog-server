@@ -21,6 +21,6 @@ const ActicleCategory = seq.define('tb_acticle_category', {
     freezeTableName: true, 
   }
 );
-ActicleCategory.sync({ alter: true })
+// ActicleCategory.sync({ alter: true })
 
 module.exports = ActicleCategory;

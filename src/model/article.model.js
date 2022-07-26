@@ -47,6 +47,6 @@ const Article = seq.define('tb_article', {
     freezeTableName: true,
   }
 );
-Article.sync({ alter: true })
+// Article.sync({ alter: true })
 
 module.exports = Article;

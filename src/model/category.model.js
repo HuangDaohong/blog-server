@@ -18,6 +18,6 @@ const Category = seq.define('tb_category', {
     freezeTableName: true, 
   }
 );
-Category.sync({ alter: true })
+// Category.sync({ alter: true })
 
 module.exports = Category;

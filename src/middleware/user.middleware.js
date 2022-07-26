@@ -1,4 +1,6 @@
 const bcrypt = require('bcryptjs'); //加密，比md5高级
+const KoaBody = require('koa-body');
+const path = require('path');
 const { getUserInfo } = require('../service/user.service');
 const {
   userFormateError,
@@ -11,44 +13,40 @@ const {
 
 
 const userValidator = async (ctx, next) => {
-
-  const { user_name, password } = ctx.request.body;
+  const { name, password, email } = ctx.request.body;
   // 合法性
-  if (!user_name || !password) {
-    console.error('用户名或密码为空', ctx.request.body);
-
-    // 直接下面这样写也行
-    // ctx.body = {
-    //   code: 0,
-    //   message: '用户名或密码不能为空',
-    //   result: '',
-    // };
+  if (!name || !password || !email) {
+    console.error('用户名或密码或邮箱为空', ctx.request.body);
     ctx.app.emit('error', userFormateError, ctx);
     return;
   }
-  // 必须要写，否则不执行下一个中间件
+
+  await next();
+};
+const userValidatorLogin = async (ctx, next) => {
+  const { name, password, email } = ctx.request.body;
+  // 合法性
+  if (!(name || email) || !password) {
+    console.error('用户名或密码或邮箱为空', ctx.request.body);
+    ctx.app.emit('error', userFormateError, ctx);
+    return;
+  }
+
   await next();
 };
 
-// 用户名是否存在
+// 用户名和邮箱是否存在
 const verifyUser = async (ctx, next) => {
-
-  const { user_name } = ctx.request.body;
-
-  // if (await getUerInfo({ user_name })) {
-  //   ctx.app.emit('error', userAlreadyExited, ctx)
-  //   return
-  // }
-
+  const { name, email } = ctx.request.body;
   try {
-    const res = await getUserInfo({ user_name });
+    const res = await getUserInfo({ name, email });
     if (res) {
-      console.error('用户名已经存在', { user_name });
+      console.error('用户名或邮箱已经存在', { name });
       ctx.app.emit('error', userAlreadyExited, ctx);
       return;
     }
   } catch (err) {
-    console.error('获取用户信息错误', err);
+    console.warn('获取用户信息错误', err);
     ctx.app.emit('error', userRegisterError, ctx);
     return;
   }
@@ -60,28 +58,33 @@ const verifyUser = async (ctx, next) => {
 const crpytPassword = async (ctx, next) => {
 
   const { password } = ctx.request.body;
-  //生成盐
-  const salt = bcrypt.genSaltSync(10);
-  // hash保存的是密文
-  const hash = bcrypt.hashSync(password, salt);
-  ctx.request.body.password = hash;
+  // 检查密码是否存在
+  if (!password) {
+    await next();
+  }
+  else {
+    //生成盐
+    const salt = bcrypt.genSaltSync(10);
+    // hash保存的是密文
+    const hash = bcrypt.hashSync(password, salt);
+    ctx.request.body.password = hash;
 
-  await next();
+    await next();
+  }
+
 };
 
 const verifyLogin = async (ctx, next) => {
-  // 1. 判断用户是否存在(不存在:报错)
-  const { user_name, password } = ctx.request.body;
+  // 1. 判断用户或邮箱是否存在(不存在:报错)
+  const { name, email, password } = ctx.request.body;
 
   try {
-    const res = await getUserInfo({ user_name });
-
+    const res = await getUserInfo({ name, email });
     if (!res) {
-      console.error('用户名不存在', { user_name });
+      console.error('用户名不存在', { name });
       ctx.app.emit('error', userDoesNotExist, ctx);
       return;
     }
-
     // 2. 密码是否匹配(不匹配: 报错)
     if (!bcrypt.compareSync(password, res.password)) {
       ctx.app.emit('error', invalidPassword, ctx);
@@ -95,9 +98,27 @@ const verifyLogin = async (ctx, next) => {
   await next();
 };
 
+const koabodysettings =
+  KoaBody({
+    multipart: true,// 支持多文件上传
+    formidable: {
+      uploadDir: path.join(__dirname, '../upload/'),
+      keepExtensions: true,//保持后缀名
+      maxFieldsSize: 10 * 1024 * 1024, // 文件上传大小限制
+      // onFileBegin: (name, file) => {
+      //   // 获取文件后缀
+      //   file.filepath=path.join(__dirname, '../upload/'+'11.jpg')
+      // }
+    },
+
+  });
+
+
 module.exports = {
   userValidator,
+  userValidatorLogin,
   verifyUser,
   crpytPassword,
   verifyLogin,
+  koabodysettings
 };

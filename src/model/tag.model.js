@@ -17,6 +17,6 @@ const Tag = seq.define('tb_tag', {
     freezeTableName: true, 
   }
 );
-Tag.sync({ alter: true })
+// Tag.sync({ alter: true })
 
 module.exports = Tag;

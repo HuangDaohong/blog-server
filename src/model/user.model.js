@@ -14,7 +14,7 @@ const User = seq.define('tb_user', {
     comment: '用户名, 唯一',
   },
   password: {
-    type: DataTypes.CHAR(32),
+    type: DataTypes.STRING,
     allowNull: false,
     comment: '密码',
   },
@@ -24,7 +24,8 @@ const User = seq.define('tb_user', {
     comment: '头像',
   },
   email: {
-    type: DataTypes.STRING(20)
+    type: DataTypes.STRING(20),
+    allowNull: false
   },
   role: {
     type: DataTypes.TINYINT,
@@ -42,10 +43,10 @@ const User = seq.define('tb_user', {
   },
 },
   {
-    freezeTableName: true, 
+    freezeTableName: true,
   }
 );
 // node src/model/user.model.js
-User.sync({ alter: true })
+// User.sync({ force: true });
 
 module.exports = User;

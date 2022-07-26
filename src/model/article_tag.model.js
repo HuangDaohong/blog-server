@@ -21,6 +21,6 @@ const ArticeTag = seq.define('tb_article_tag', {
     freezeTableName: true,
   }
 );
-ArticeTag.sync({ alter: true })
+// ArticeTag.sync({ alter: true })
 
 module.exports = ArticeTag;

@@ -5,15 +5,15 @@ module.exports = {
     message: '未知错误',
     result: '',
   },
-  
+
   userFormateError: {
     code: '10001',
-    message: '用户名或密码为空',
+    message: '用户名或密码或邮箱为空',
     result: '',
   },
   userAlreadyExited: {
     code: '10002',
-    message: '用户已经存在',
+    message: '用户或邮箱已经存在',
     result: '',
   },
   userRegisterError: {
@@ -51,9 +51,14 @@ module.exports = {
     message: '没有管理员权限',
     result: '',
   },
+  noToken: {
+    code: '10104',
+    message: '没有token',
+    result: '',
+  },
   fileUploadError: {
     code: '10201',
-    message: '商品图片上传失败',
+    message: '头像图片上传失败',
     result: '',
   },
   unSupportedFileType: {
@@ -61,5 +66,5 @@ module.exports = {
     message: '不支持的文件格式',
     result: '',
   },
-  
+
 };

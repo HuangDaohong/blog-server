@@ -32,7 +32,7 @@ const Comment = seq.define('tb_comment', {
     freezeTableName: true,
   }
 );
-Comment.sync({ alter: true })
+// Comment.sync({ alter: true })
 
 
 module.exports = Comment;
