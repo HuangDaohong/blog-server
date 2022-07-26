@@ -98,16 +98,16 @@ const verifyLogin = async (ctx, next) => {
   await next();
 };
 
-const koabodysettings =
-  KoaBody({
+// 最好在app/index.js中定义
+const koabodysettings = KoaBody(
+  {
     multipart: true,// 支持多文件上传
     formidable: {
       uploadDir: path.join(__dirname, '../upload/'),
       keepExtensions: true,//保持后缀名
-      maxFieldsSize: 10 * 1024 * 1024, // 文件上传大小限制
+      maxFieldsSize: 200 * 1024 * 1024, // 文件上传大小限制
       // onFileBegin: (name, file) => {
-      //   // 获取文件后缀
-      //   file.filepath=path.join(__dirname, '../upload/'+'11.jpg')
+      // file.filepath = path.join(__dirname, '../upload/' + '11.jpg');
       // }
     },
 
