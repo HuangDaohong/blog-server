@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const KoaBody = require('koa-body');
 const path = require('path');
 const fs = require('fs');
 const {
@@ -81,24 +80,31 @@ class UserController {
     const { id } = ctx.state.user;
     const { avatar_Img } = ctx.request.files || {};
 
-    // 更改头像名称
-    const filename = avatar_Img.newFilename;
-    const suffix = filename.substring(filename.lastIndexOf("."));//.jpg
-    fs.rename(
-      ctx.request.files.avatar_Img.filepath,
-      path.join(__dirname, '../upload/' + ctx.state.user.name + '-avatar' + suffix),
-      function (err) {
-        if (err) throw err;
-      });
-
-    // 头像名称
-    const new_avatarname = path.join(ctx.state.user.name + '-avatar' + suffix);
-
     const fileTypes = ['image/jpeg', 'image/png'];
     if (avatar_Img) {
       if (!fileTypes.includes(avatar_Img.mimetype)) {
-        return ctx.app.emit('error', unSupportedFileType, ctx);
+        // 删除上传的非图文件
+        // try {
+        //   const delfile = path.join(__dirname, '../upload/', avatar_Img.newFilename);
+        //   fs.unlinkSync(delfile);
+          return ctx.app.emit('error', unSupportedFileType, ctx);
+        // } catch {
+        //   return ctx.app.emit('error', fileUploadError, ctx);
+        // }
       }
+
+      // 文件名 *.jpg
+      const filename = avatar_Img.newFilename;
+      // 后缀 .jpg
+      const suffix = filename.substring(filename.lastIndexOf("."));
+      const new_avatarname = (ctx.state.user.name + '-avatar' + suffix);
+      fs.rename(
+        ctx.request.files.avatar_Img.filepath,
+        path.join(__dirname, '../upload/' + new_avatarname),
+        function (err) {
+          if (err) throw err;
+        });
+
       await updateById({ id, avatar: new_avatarname });
       ctx.body = {
         code: 0,

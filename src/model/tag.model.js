@@ -10,6 +10,7 @@ const Tag = seq.define('tb_tag', {
   description: {
     type: DataTypes.STRING(255),
     allowNull: true,
+    defaultValue: '暂无描述',
     comment: '标签描述'
   },
 },

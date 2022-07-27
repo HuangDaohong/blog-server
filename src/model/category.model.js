@@ -11,6 +11,7 @@ const Category = seq.define('tb_category', {
   description: {
     type: DataTypes.STRING(255),
     allowNull: true,
+    defaultValue: '暂无描述',
     comment: '分类描述'
   },
 },

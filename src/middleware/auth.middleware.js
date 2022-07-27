@@ -1,13 +1,13 @@
 const jwt = require('jsonwebtoken');
 
 const { JWT_SECRET } = require('../config/config.default');
-
 const {
   tokenExpiredError,
   invalidToken,
   noToken,
   hasNotAdminPermission,
   UNKNOWN_ERROR,
+  PARAM_ERROR
 } = require('../constant/err.type');
 
 const auth = async (ctx, next) => {
@@ -48,7 +48,20 @@ const hadAdminPermission = async (ctx, next) => {
   await next();
 };
 
+const validator = (rules) => {
+  return async (ctx, next) => {
+    try {
+      ctx.verifyParams(rules);
+    } catch (err) {
+      console.error(err);
+      return ctx.app.emit('error', PARAM_ERROR, ctx);
+    }
+    await next();
+  };
+};
+
 module.exports = {
   auth,
   hadAdminPermission,
+  validator
 };
