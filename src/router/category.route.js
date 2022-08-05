@@ -16,17 +16,17 @@ const router = new Router({ prefix: '/category' });
 router.post(
   '/addcategory',
   auth,
+  hadAdminPermission,
   validator({
     name: 'string',
     description: { type: 'string', required: false },
   }),
   verifyIsExisted,
-  hadAdminPermission,
   add
 );
 
 // 获取分类列表
-router.get('/', auth, finAll);
+router.get('/', finAll);
 
 // TODO 删除之后，文章设置表也应该删除对应的记录
 // 删除分类{id} 
@@ -37,12 +37,12 @@ router.post('/delete', auth, hadAdminPermission, deleteCategory);
 router.post(
   '/update',
   auth,
+  hadAdminPermission,
   validator({
     name: { type: 'string', required: false },
     description: { type: 'string', required: false },
   }),
   verifyIsExisted,
-  hadAdminPermission,
   updateCategory
 );
 

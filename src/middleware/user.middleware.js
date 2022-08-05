@@ -78,7 +78,7 @@ const crpytPassword = async (ctx, next) => {
 const verifyLogin = async (ctx, next) => {
   // 1. 判断用户或邮箱是否存在(不存在:报错)
   const { name, email, password } = ctx.request.body;
-
+  
   try {
     const res = await getUserInfo({ name, email });
     if (!res) {

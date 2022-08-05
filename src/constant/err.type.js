@@ -3,137 +3,180 @@ module.exports = {
   UNKNOWN_ERROR: {
     code: 'UNKNOWN_ERROR',
     message: '未知错误',
-    result: '',
+    data: '',
   },
   // 数据格式错误
   PARAM_ERROR: {
     code: '20001',
     message: '数据格式错误',
-    result: '',
+    data: '',
   },
 
   userFormateError: {
     code: '10001',
     message: '用户名或密码或邮箱为空',
-    result: '',
+    data: '',
   },
   userAlreadyExited: {
     code: '10002',
     message: '用户或邮箱已经存在',
-    result: '',
+    data: '',
   },
   userRegisterError: {
     code: '10003',
     message: '用户注册错误',
-    result: '',
+    data: '',
   },
   userDoesNotExist: {
     code: '10004',
     message: '用户不存在',
-    result: '',
+    data: '',
   },
   userLoginError: {
     code: '10005',
     message: '用户登录失败',
-    result: '',
+    data: '',
   },
   invalidPassword: {
     code: '10006',
     message: '密码不匹配',
-    result: '',
+    data: '',
+  },
+  getUserInfoError: {
+    code: '10007',
+    message: '获取用户信息失败',
+    data: '',
   },
   tokenExpiredError: {
     code: '10101',
     message: 'token已过期',
-    result: '',
+    data: '',
   },
   invalidToken: {
     code: '10102',
     message: '无效的token',
-    result: '',
+    data: '',
   },
   hasNotAdminPermission: {
     code: '10103',
     message: '没有管理员权限',
-    result: '',
+    data: '',
   },
   noToken: {
     code: '10104',
     message: '没有token',
-    result: '',
+    data: '',
   },
   fileUploadError: {
     code: '10201',
     message: '头像图片上传失败',
-    result: '',
+    data: '',
   },
   unSupportedFileType: {
     code: '10202',
     message: '不支持的文件格式',
-    result: '',
+    data: '',
   },
 
   tagAddError: {
     code: '10301',
     message: '添加标签失败',
-    result: '',
+    data: '',
   },
   tagGeterror: {
     code: '10302',
     message: '获取标签失败',
-    result: '',
+    data: '',
   },
   tagDelerror: {
     code: '10303',
     message: '删除标签失败',
-    result: '',
+    data: '',
   },
   tagUpdateError: {
     code: '10304',
     message: '修改标签失败',
-    result: '',
+    data: '',
   },
   invalidTagID: {
     code: '10305',
     message: '无效的标签ID',
-    result: '',
+    data: '',
   },
   tagIsExistedError: {
     code: '10306',
     message: '标签名已存在',
-    result: '',
+    data: '',
   },
 
   categoryAddError: {
     code: '10401',
     message: '添加分类失败',
-    result: '',
+    data: '',
   },
   categoryGeterror: {
     code: '10402',
     message: '获取分类失败',
-    result: '',
+    data: '',
   },
   categoryDelerror: {
     code: '10403',
     message: '删除分类失败',
-    result: '',
+    data: '',
   },
   categoryUpdateError: {
     code: '10404',
     message: '修改分类失败',
-    result: '',
+    data: '',
   },
   invalidCategoryID: {
     code: '10405',
     message: '无效的分类ID',
-    result: '',
+    data: '',
   },
   categoryIsExistedError: {
     code: '10406',
     message: '分类名已存在',
-    result: '',
+    data: '',
   },
 
+  // 评论相关
+  commentAddError: {
+    code: '10501',
+    message: '添加评论失败',
+    data: '',
+  },
+  commentGetError: {
+    code: '10502',
+    message: '获取评论失败',
+    data: '',
+  },
+  commentDelError: {
+    code: '10503',
+    message: '删除评论失败',
+    data: '',
+  },
+  commentUpdateError: {
+    code: '10504',
+    message: '修改评论失败',
+    data: '',
+  },
+  invalidCommentID: {
+    code: '10505',
+    message: '无效的评论ID',
+    data: '',
+  },
+
+  // 文章相关
+  articleIsExistedError: {
+    code: '10601',
+    message: '文章已存在',
+    data: '',
+  },
+  articleAddError: {
+    code: '10602',
+    message: '添加文章失败',
+    data: '',
+  },
 
 };

@@ -25,10 +25,10 @@ const {
 
 const router = new Router({ prefix: '/users' });
 
-router.get('/', async (ctx) => {
-  ctx.body = 'this is a users response!';
-}
-);
+// router.get('/', async (ctx) => {
+//   ctx.body = 'this is a users response!';
+// }
+// );
 
 // 注册接口  {name,email,password}
 router.post('/register', userValidator, verifyUser, crpytPassword, register);

@@ -16,17 +16,19 @@ const router = new Router({ prefix: '/tags' });
 router.post(
   '/addtag',
   auth,
+  hadAdminPermission,
   validator({
     name: 'string',
     description: { type: 'string', required: false },
+    background: { type: 'string', required: false },
+    color: { type: 'string', required: false }
   }),
   verifyIsExisted,
-  hadAdminPermission,
   add
 );
 
 // 获取标签列表
-router.get('/', auth, finAll);
+router.get('/', finAll);
 
 // TODO 删除之后，文章设置表也应该删除对应的记录
 // 删除标签{id} 
@@ -37,12 +39,14 @@ router.post('/delete', auth, hadAdminPermission, deleteTag);
 router.post(
   '/update',
   auth,
+  hadAdminPermission,
   validator({
     name: { type: 'string', required: false },
     description: { type: 'string', required: false },
+    background: { type: 'string', required: false },
+    color: { type: 'string', required: false }
   }),
   verifyIsExisted,
-  hadAdminPermission,
   updateTag
 );
 

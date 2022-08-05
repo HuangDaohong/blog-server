@@ -2,9 +2,9 @@ const Category = require('../model/category.model');
 class CategoryService {
 
   // 插入数据
-  async createCategory (name, description) {
+  async createCategory (name, description,background) {
 
-    return await Category.create(name, description);
+    return await Category.create(name, description,background);
   }
 
   // 查询所有数据
@@ -26,6 +26,13 @@ class CategoryService {
       where: { id: category.id }
     });
     return res[0];
+  }
+
+  // 根据id查询数据
+  async findCategoryById (id) {
+    return await Category.findOne({
+      where: { id }
+    });
   }
 }
 

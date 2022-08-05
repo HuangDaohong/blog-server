@@ -14,6 +14,12 @@ const Category = seq.define('tb_category', {
     defaultValue: '暂无描述',
     comment: '分类描述'
   },
+  background: {
+    type: DataTypes.STRING(255),
+    allowNull: true,
+    defaultValue:'default.jpg',
+    comment: '分类背景图'
+  }
 },
   {
     freezeTableName: true, 

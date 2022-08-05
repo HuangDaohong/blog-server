@@ -17,16 +17,16 @@ class CategoryController {
 
   // 添加分类
   async add (ctx, next) {
-    const { name, description } = ctx.request.body;
+    const { name, description,background } = ctx.request.body;
     try {
-      const res = await createCategory({ name, description });
+      const res = await createCategory({ name, description,background });
       ctx.body = {
         code: 0,
         message: '添加分类成功',
-        result: res
+        data: res
       };
     } catch (err) {
-      ctx.app.emit('error', categoryAddError, ctx);
+      return ctx.app.emit('error', categoryAddError, ctx);
     }
   }
 
@@ -37,11 +37,11 @@ class CategoryController {
       ctx.body = {
         code: 0,
         message: '获取分类列表成功',
-        result: res
+        data: res
       };
     }
     catch (err) {
-      ctx.app.emit('error', categoryGeterror, ctx);
+      return ctx.app.emit('error', categoryGeterror, ctx);
     }
   }
 
@@ -52,7 +52,7 @@ class CategoryController {
       ctx.body = {
         code: 0,
         message: '删除分类成功',
-        result: '',
+        data: '',
       };
     } else {
       return ctx.app.emit('error', categoryDelerror, ctx);
@@ -67,14 +67,14 @@ class CategoryController {
         ctx.body = {
           code: 0,
           message: '修改分类成功',
-          result: res
+          data: res
         };
       } else {
         return ctx.app.emit('error', invalidCategoryID, ctx);
       }
 
     } catch (err) {
-      ctx.app.emit('error', categoryUpdateError, ctx);
+      return ctx.app.emit('error', categoryUpdateError, ctx);
     }
   }
 
