@@ -32,8 +32,11 @@ app.use(KoaStatic(path.join(__dirname, '../upload')));
 app.use(parameter(app));
 app.use(cors());
 
+// require('../model/relation');
+
 app.use(router.routes()).use(router.allowedMethods());
 
+// 统一的错误处理
 app.on('error', errHandler);
 
 module.exports = app;

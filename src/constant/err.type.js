@@ -178,5 +178,10 @@ module.exports = {
     message: '添加文章失败',
     data: '',
   },
+  articleGetError: {
+    code: '10603',
+    message: '获取文章失败',
+    data: '',
+  },
 
 };

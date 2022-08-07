@@ -26,5 +26,6 @@ const Category = seq.define('tb_category', {
   }
 );
 // Category.sync({ alter: true })
+// Category.sync({ force: true })
 
 module.exports = Category;

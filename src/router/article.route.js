@@ -1,7 +1,7 @@
 const Router = require('koa-router');
 const { verifyIsExisted } = require('../middleware/article.middleware');
 const { auth, hadAdminPermission, validator } = require('../middleware/auth.middleware');
-const { add } = require('../controller/article.controller');
+const { add, getAll,getAllByCategory } = require('../controller/article.controller');
 
 const router = new Router({ prefix: '/article' });
 
@@ -20,16 +20,16 @@ router.post(
 );
 
 // 获取文章列表
-router.get('/all');
+router.get('/all',getAll);
 
 // 分页获取文章列表
-router.get('/');
+router.get('/', );
 
-// 根据id获取文章
+// 根据文章id获取文章，views+1
 router.get('/:id');
 
 // 根据分类id获取文章
-router.get('/category/:id');
+router.get('/category/:id',getAllByCategory);
 
 // 根据标签id获取文章
 router.get('/tag/:id');

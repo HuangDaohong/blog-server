@@ -1,5 +1,7 @@
 const Tag = require('../model/tag.model');
 const { Op } = require('sequelize');
+const ArticleTag = require('../model/article_tag.model');
+const Article = require('../model/article.model');
 class TagService {
   // 插入数据
   async createTag(name, description, color, background) {
@@ -9,7 +11,13 @@ class TagService {
 
   // 查询所有数据
   async finAllTags() {
-    return await Tag.findAndCountAll();
+    return await Tag.findAndCountAll({
+      // include: [
+      //   {
+      //     model: Article,
+      //   },
+      // ],
+    });
   }
 
   // 删除数据
