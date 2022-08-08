@@ -1,5 +1,5 @@
 const Article = require('../model/article.model');
-const { articleIsExistedError } = require('../constant/err.type');
+const { articleIsExistedError, articleNotFoundError } = require('../constant/err.type');
 
 const verifyIsExisted = async (ctx, next) => {
   // 文章名是否已经存在
@@ -10,6 +10,7 @@ const verifyIsExisted = async (ctx, next) => {
   }
   return await next();
 };
+
 module.exports = {
   verifyIsExisted,
 };

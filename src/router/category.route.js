@@ -28,11 +28,10 @@ router.post(
 // 获取分类列表
 router.get('/', finAll);
 
-// TODO 删除之后，文章设置表也应该删除对应的记录
+// TODO 删除之后，文章也应该处理
 // 删除分类{id} 
 router.post('/delete', auth, hadAdminPermission, deleteCategory);
 
-// TODO 
 // 修改分类 {id,?name,?description}
 router.post(
   '/update',

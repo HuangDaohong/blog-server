@@ -1,9 +1,4 @@
-const {
-  createCategory,
-  finAllCategorys,
-  removeCategory,
-  updateCategory,
-} = require('../service/category.service');
+const { createCategory, finAllCategorys, removeCategory, updateCategory } = require('../service/category.service');
 const {
   categoryAddError,
   categoryGeterror,
@@ -12,18 +7,16 @@ const {
   invalidCategoryID,
 } = require('../constant/err.type');
 
-
 class CategoryController {
-
   // 添加分类
-  async add (ctx, next) {
-    const { name, description,background } = ctx.request.body;
+  async add(ctx) {
+    const { name, description, background } = ctx.request.body;
     try {
-      const res = await createCategory({ name, description,background });
+      const res = await createCategory({ name, description, background });
       ctx.body = {
         code: 0,
         message: '添加分类成功',
-        data: res
+        data: res,
       };
     } catch (err) {
       return ctx.app.emit('error', categoryAddError, ctx);
@@ -31,22 +24,21 @@ class CategoryController {
   }
 
   // 获取分类列表
-  async finAll (ctx, next) {
+  async finAll(ctx) {
     try {
       const res = await finAllCategorys();
       ctx.body = {
         code: 0,
         message: '获取分类列表成功',
-        data: res
+        data: res,
       };
-    }
-    catch (err) {
+    } catch (err) {
       return ctx.app.emit('error', categoryGeterror, ctx);
     }
   }
 
   // 删除分类
-  async deleteCategory (ctx, next) {
+  async deleteCategory(ctx) {
     const res = await removeCategory(ctx.request.body.id);
     if (res) {
       ctx.body = {
@@ -60,24 +52,22 @@ class CategoryController {
   }
 
   // 修改分类
-  async updateCategory (ctx, next) {
+  async updateCategory(ctx) {
     try {
       const res = await updateCategory(ctx.request.body);
       if (res) {
         ctx.body = {
           code: 0,
           message: '修改分类成功',
-          data: res
+          data: res,
         };
       } else {
         return ctx.app.emit('error', invalidCategoryID, ctx);
       }
-
     } catch (err) {
       return ctx.app.emit('error', categoryUpdateError, ctx);
     }
   }
-
 }
 
 module.exports = new CategoryController();

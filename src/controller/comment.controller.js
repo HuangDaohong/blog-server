@@ -6,6 +6,7 @@ const {
   deleteManyComment,
   deleteOneComment,
   updateComment,
+  getAllCommentByArticleId
 } = require('../service/comment.service');
 
 const {
@@ -63,6 +64,21 @@ class CommentController {
     }
   }
 
+  // 根据文章id获取所有评论
+  async getAllByArticleId(ctx) {
+    const { pageNum = 1, pageSize = 10 } = ctx.request.query;
+    try {
+      const res = await getAllCommentByArticleId(ctx.params.id,pageNum, pageSize);
+      ctx.body = {
+        code: 0,
+        message: '获取评论列表成功',
+        data: res,
+      };
+    } catch {
+      return ctx.app.emit('error', commentGetError, ctx);
+    }
+  }
+
   // 分页获取评论列表
   async getAllByPage(ctx, next) {
     const { pageNum = 1, pageSize = 10 } = ctx.request.query;
@@ -80,7 +96,7 @@ class CommentController {
   }
 
   // 批量删除评论  array [1,2,3]
-  async deleteMany(ctx, next) {
+  async deleteMany(ctx) {
     const { ids } = ctx.request.body;
     try {
       // res是删除的条数
@@ -96,7 +112,7 @@ class CommentController {
   }
 
   // 根据id删除评论
-  async deleteOne(ctx, next) {
+  async deleteOne(ctx) {
     const { id } = ctx.params;
     try {
       const res = await deleteOneComment(id);

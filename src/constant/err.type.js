@@ -8,7 +8,7 @@ module.exports = {
   // 数据格式错误
   PARAM_ERROR: {
     code: '20001',
-    message: '数据格式错误',
+    message: '传入数据格式错误',
     data: '',
   },
 
@@ -121,7 +121,7 @@ module.exports = {
   },
   categoryDelerror: {
     code: '10403',
-    message: '删除分类失败',
+    message: '删除分类失败,删除失败，可能存在关联文章',
     data: '',
   },
   categoryUpdateError: {
@@ -183,5 +183,53 @@ module.exports = {
     message: '获取文章失败',
     data: '',
   },
+  articleNotFoundError: {
+    code: '10604',
+    message: '文章不存在',
+    data: '',
+  },
+  articleDelError: {
+    code: '10605',
+    message: '删除文章失败',
+    data: '',
+  },
+  articleUpdateError: {
+    code: '10606',
+    message: '修改文章失败',
+    data: '',
+  },
+  articleTitleExistedError: {
+    code: '10607',
+    message: '文章标题已存在',
+    data: '',
+  },
 
+  // 网站相关
+  configDataGetError: {
+    code: '10701',
+    message: '获取网站数据失败',
+    data: '',
+  },
+
+  // 友链相关
+  friendAddError: {
+    code: '10801',
+    message: '添加友链失败',
+    data: '',
+  },
+  friendGeterror: {
+    code: '10802',
+    message: '获取友链失败',
+    data: '',
+  },
+  friendDelerror: {
+    code: '10803',
+    message: '删除友链失败',
+    data: '',
+  },
+  friendUpdateError: {
+    code: '10804',
+    message: '修改友链失败',
+    data: '',
+  },
 };

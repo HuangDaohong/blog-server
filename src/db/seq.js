@@ -7,16 +7,16 @@ const seq = new Sequelize(MYSQL_DB, MYSQL_USER, MYSQL_PWD, {
   port: MYSQL_PORT,
   dialect: 'mysql',
   timezone: '+08:00', //东八时区
+  logging: false, // 是否打印sql语句
+
   define: {
     //全局的定义，会通过连接实例传递
 
-    // timestamps: false,   //默认情况下,Sequelize 使用数据类型 DataTypes.DATE 自动向每个模型添加 createdAt 和 updatedAt 字段. 这些字段会自动进行管理 
-    //对于带有timestamps: false 参数的模型,可以禁用此行为
+    // timestamps: false,   //Sequelize动向每个模型添加 createdAt 和 updatedAt 字段
     // createdAt: 'created_at',  //自定义时间戳
     // updatedAt: 'updated_at',
-
     // paranoid: true,
-    // deletedAt: 'deleted_at',  //paranoid表示在被告之要删除记录时并不会真正的物理上删除，而是添加一个存有删除请求时间戳deletedAt的特殊字段。传递paranoid: true参数给模型定义中。paranoid要求必须启用时间戳，即必须传timestamps: true
+    // deletedAt: 'deleted_at',  //paranoid表示在被告之要删除记录时并不会真正的物理上删除，而是添加一个存有删除请求时间戳deletedAt的特殊字段。
     // 把驼峰命名转换为下划线
     //underscored: false,
     pool: {
@@ -26,6 +26,18 @@ const seq = new Sequelize(MYSQL_DB, MYSQL_USER, MYSQL_PWD, {
       acquire: 30000,
       idle: 10000, // 如果一个线程 10 秒钟内没有被使用过的话，那么就释放线程
     },
+    
+    //配置(好像没啥用啊):如果没有加 dialectOptions 配置上的 typeCast 属性值为 true的话，返回的时间是 ISO 标准时间日期字符。（如：'2022-04-16T15:02:08.017Z'）
+    // dialectOptions: {
+    //   // 时间格式化，返回字符串
+    //   dateStrings: true,
+    //   typeCast(field, next) {
+    //     if (field.type === 'DATETIME') {
+    //       return field.string();
+    //     }
+    //     return next();
+    //   },
+    // },
   },
 });
 
@@ -40,6 +52,6 @@ const seq = new Sequelize(MYSQL_DB, MYSQL_USER, MYSQL_PWD, {
 //   })
 
 // 模型同步
-// sequelize.sync({ force: false })  // 如果表不存在,则创建该表(如果已经存在,则不执行任何操作); { force: true },如果表已经存在,则将其首先删除
+// seq.sync({ alter: true })
 
 module.exports = seq;

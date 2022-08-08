@@ -20,7 +20,7 @@ const Article = seq.define(
       comment: '文章id',
     },
     title: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.STRING,
       allowNull: false,
       unique: true,
       comment: '文章标题',
@@ -67,15 +67,38 @@ const Article = seq.define(
       defaultValue: 0,
       comment: '文章点赞量',
     },
+    origin: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+      validate: {
+        isIn: [[0, 1, 2]],
+      },
+      comment: '文章来源 0:原创, 1:转载 2:混合',
+    },
+    weight: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+      validate: {
+        isIn: [[0, 1, 2]],
+      },
+      comment: '文章权重 0:普通, 1:热门,2 推荐',
+    },
+    comments: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+      comment: '文章评论数',
+    }
   },
   {
     freezeTableName: true,
     paranoid: true, // 删除时不删除数据,而是把 deletedAt 字段设置为当前时间
+    //表备注
+    comment: '文章表',
   }
 );
+
 // 文章表和分类表的关系;Category 和 Article 是一对多的关系。因此，每个Category有多个Article，Article表中有一个categoryId列。
 // Category.hasMany(Article, { foreignKey: 'categoryId' });
-
 Article.belongsTo(Category, {
   foreignKey: 'category_id',
   as: 'categoryInfo',
@@ -125,4 +148,9 @@ module.exports = Article;
  * 请参见“Sequelize.define”）。使用对象时，可以添加“name”属性来设置列的名称。默认为目标的名称+目标的主键
  * foreignKey:目标表中外键的名称，或表示外部列类型定义的对象的名称（有关语法，
  * 请参见'Sequelize.define'。使用对象时，可以添加“name”属性来设置列的名称。默认为源的名称+源的主键
+ */
+/**
+ * 联表查询优劣优点：联表查询用起来很方便，不需要做太多了处理，尤其在 B 端场景会用的比较多。
+ * 缺点：对于 C 端这种流量较大场景，使用联表查询效率会很低下，可能会导致服务器崩溃，
+ * 所以现在大多数在 C 端都不采用 SQL 自带的联表查询功能，一般会通过代码逻辑来处理，大大减少查询效率。
  */

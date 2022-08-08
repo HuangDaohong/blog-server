@@ -1,9 +1,13 @@
 const Comment = require('../model/comment.model');
+const Article = require('../model/article.model');
+const User = require('../model/user.model');
 const { Op } = require('sequelize');
 
 class CommentService {
   // 新增评论
   async createComment(comment) {
+    // 文章评论数+1
+    await Article.increment({ comments: 1 }, { where: { id: comment.article_id } });
     return await Comment.create(comment);
   }
 
@@ -19,11 +23,29 @@ class CommentService {
     return await Comment.findAndCountAll();
   }
 
+  // 根据文章id获取所有评论
+  async getAllCommentByArticleId(articleId, pageNum, pageSize) {
+    return await Comment.findAndCountAll({
+      where: { article_id: articleId },
+      offset: (pageNum - 1) * pageSize,
+      limit: pageSize * 1,
+      order: [['createdAt', 'DESC']],
+    });
+  }
+
   // 分页获取评论列表
   async getAllCommentByPage(pageNum, pageSize) {
     const { count, rows } = await Comment.findAndCountAll({
+      include: [
+        {
+          model: User,
+          attributes: ['id', 'name', 'avatar'],
+        },
+      ],
+      distinct: true, //去重,它返回的 count 不会把你的 include 的数量算进去
       offset: (pageNum - 1) * pageSize,
       limit: pageSize * 1,
+      order: [['createdAt', 'DESC']],
     });
     return {
       total: count,
@@ -45,7 +67,7 @@ class CommentService {
 
   // 删除单个评论
   async deleteOneComment(id) {
-    const res= await Comment.destroy({
+    const res = await Comment.destroy({
       where: { id },
     });
     return res > 0 ? true : false;

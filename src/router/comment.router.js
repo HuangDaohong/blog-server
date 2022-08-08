@@ -1,7 +1,16 @@
 const Router = require('koa-router');
 const { auth, hadAdminPermission, validator } = require('../middleware/auth.middleware');
 
-const { add, getOne, getAll, getAllByPage, deleteMany, deleteOne,updateOne } = require('../controller/comment.controller');
+const {
+  add,
+  getOne,
+  getAll,
+  getAllByPage,
+  deleteMany,
+  deleteOne,
+  updateOne,
+  getAllByArticleId
+} = require('../controller/comment.controller');
 
 const router = new Router({ prefix: '/comment' });
 
@@ -17,13 +26,16 @@ router.post(
 );
 
 // 获取指定评论
-router.get('/:id', auth, hadAdminPermission, getOne);
+router.get('/:id', getOne);
 
 // 获取评论列表
 router.get('/all', getAll);
 
 // 分页获取评论列表
 router.get('/', getAllByPage);
+
+// 根据文章id获取评论列表
+router.get('/article/:id', getAllByArticleId);
 
 // 批量删除评论  {"ids": [1,2,3]}
 router.delete('/', auth, hadAdminPermission, deleteMany);
@@ -32,11 +44,6 @@ router.delete('/', auth, hadAdminPermission, deleteMany);
 router.delete('/:id', auth, hadAdminPermission, deleteOne);
 
 // 根据id更新评论
-router.put(
-  '/:id',
-  auth,
-  hadAdminPermission,
-  updateOne
-);
+router.put('/:id', auth, hadAdminPermission, updateOne);
 
 module.exports = router;
