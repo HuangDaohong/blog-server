@@ -105,7 +105,7 @@ class UserController {
       await updateById({ id, avatar: new_avatarname });
       ctx.body = {
         code: 0,
-        message: '商品图片上传成功',
+        message: '图片上传成功',
         data: {
           avatar_Img: new_avatarname,
         },

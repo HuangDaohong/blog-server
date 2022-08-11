@@ -1,5 +1,5 @@
 const Router = require('koa-router');
-const { verifyIsExisted } = require('../middleware/article.middleware');
+const { verifyIsExisted,koabodysettings ,koabodyImgsettings} = require('../middleware/article.middleware');
 const { auth, hadAdminPermission, validator } = require('../middleware/auth.middleware');
 const {
   add,
@@ -14,6 +14,9 @@ const {
   updateOneByID,
   increaseViews,
   increaseLikes,
+  uploadCover,
+  getByArticleID,
+  uploadImgs,
 } = require('../controller/article.controller');
 
 const router = new Router({ prefix: '/article' });
@@ -25,8 +28,8 @@ router.post(
   hadAdminPermission,
   validator({
     title: { type: 'string', required: true },
-    category_id: { type: 'number', required: true },
-    tag_ids: { type: 'array', required: true },
+    category_id: { type: 'number', required: false },
+    tag_ids: { type: 'array', required: false },
   }),
   verifyIsExisted,
   add
@@ -40,6 +43,9 @@ router.get('/', getAllByPage);
 
 // 根据文章id获取文章详情，views+1
 router.get('/:id', getByID);
+
+// 根据article_id获取文章详情，views+1
+router.get('/detail/:article_id', getByArticleID);
 
 // 根据分类id获取文章
 router.get('/category/:id', getAllByCategory);
@@ -60,7 +66,7 @@ router.post(
 router.delete('/:id', auth, hadAdminPermission, deleteOneByID);
 
 // 批量删除文章
-router.delete('/', auth, hadAdminPermission, validator({ ids: 'array' }), deleteManyByIDs);
+router.delete('/', auth, hadAdminPermission, deleteManyByIDs);
 
 // 根据id更新文章
 router.put('/:id', auth, hadAdminPermission, updateOneByID);
@@ -71,4 +77,9 @@ router.patch('/:id/view', increaseViews);
 // 更新文章点赞量
 router.patch('/:id/like', increaseLikes);
 
+// 上传背景图片
+router.post('/uploadcover', auth, koabodysettings, uploadCover);
+
+// bytemd上传文章图片
+router.post('/uploadimgs', auth, koabodyImgsettings, uploadImgs);
 module.exports = router;

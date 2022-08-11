@@ -40,7 +40,7 @@ const Article = seq.define(
       comment: '文章封面地址',
     },
     status: {
-      type: DataTypes.CHAR(1),
+      type: DataTypes.INTEGER,
       allowNull: true,
       defaultValue: 0,
       comment: '文章状态, 0:发布, 1:草稿',

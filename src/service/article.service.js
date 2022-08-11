@@ -7,11 +7,14 @@ const { Op, QueryTypes } = require('sequelize');
 class ArticleService {
   // 新增文章
   async createArticle(article) {
+    console.log('新增文章', '--------------');
     return await Article.create(article);
   }
 
   // 添加文章id和标签id到文章标签表
   async createArticleTag({ article_id, tag_ids }) {
+    // 先删除原有的标签
+    await ArticeTag.destroy({ where: { article_id } });
     const arr = tag_ids.map((tag_id) => ({ article_id, tag_id }));
     return await ArticeTag.bulkCreate(arr);
   }
@@ -69,17 +72,15 @@ class ArticleService {
       ],
       where: {
         status: {
-          [Op.in]: status !== undefined ? [status] : [0, 1],
+          [Op.in]: status ? [status] : [0, 1],
         },
         origin: {
-          [Op.in]: origin !== undefined ? [origin] : [0, 1, 2],
+          [Op.in]: origin ? [origin] : [0, 1, 2],
         },
         weight: {
-          [Op.in]: weight !== undefined ? [weight] : [0, 1, 2],
+          [Op.in]: weight ? [weight] : [0, 1, 2],
         },
-        // title: {
-        //   [Op.like]: `%${keyword}%`,
-        // },
+        title: keyword ? { [Op.like]: `%${keyword}%` } : { [Op.ne]: null },
       },
       distinct: true, //去重,它返回的 count 不会把你的 include 的数量算进去
       order: [['createdAt', 'DESC']],
@@ -111,9 +112,37 @@ class ArticleService {
       ],
       where: {
         id: articleID,
-        status: {
-          [Op.eq]: 0,
+        // status: {
+        //   [Op.eq]: 0,
+        // },
+      },
+    });
+    if (res) {
+      await res.increment('views', { by: 1 });
+    } else {
+      return false;
+    }
+    return res.reload();
+  }
+
+  // 根据article_id获取文章,文章访问量+1
+  async getArticleByArticleID(articleID) {
+    console.log('articleID:@@@@@@@@', articleID);
+    const res = await Article.findOne({
+      include: [
+        {
+          model: Category,
+          as: 'categoryInfo',
+          attributes: ['id', 'name'],
         },
+        {
+          model: Tag,
+          attributes: ['id', 'name'],
+          through: { attributes: [] },
+        },
+      ],
+      where: {
+        article_id: articleID,
       },
     });
     if (res) {
@@ -230,6 +259,9 @@ class ArticleService {
       const isExist = await Article.findOne({
         where: {
           title: title,
+          id: {
+            [Op.ne]: articleID,
+          },
         },
       });
       if (isExist) {

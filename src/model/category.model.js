@@ -17,7 +17,7 @@ const Category = seq.define('tb_category', {
   background: {
     type: DataTypes.STRING(255),
     allowNull: true,
-    defaultValue:'default.jpg',
+    defaultValue:'https://img1.baidu.com/it/u=250628574,3890325305&fm=253&fmt=auto&app=138&f=JPEG?w=750&h=500',
     comment: '分类背景图'
   }
 },

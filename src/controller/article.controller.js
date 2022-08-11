@@ -1,3 +1,5 @@
+// const path = require('path');
+// const fs = require('fs');
 const {
   createArticle,
   createArticleTag,
@@ -12,6 +14,7 @@ const {
   updateArticleByID,
   increaseViewsById,
   increaseLikesById,
+  getArticleByArticleID,
 } = require('../service/article.service');
 const {
   articleAddError,
@@ -22,18 +25,30 @@ const {
   articleTitleExistedError,
 } = require('../constant/err.type');
 // const { createUUID } = require('../config/utils');
+const { APP_PORT } = require('../config/config.default');
 
 class ArticleController {
   /** 新增文章 */
   async add(ctx) {
+    console.log('##########', ctx.request.body);
     const user_id = ctx.state.user.id;
-    const { tag_ids = [] } = ctx.request.body;
-    const { title, subtitle, content, cover, status, category_id } = ctx.request.body;
+    const { tags = [] } = ctx.request.body;
+    const { title, summary, content, cover, status, category, origin, weight } = ctx.request.body;
     let articleID = null;
     try {
-      const res = await createArticle({ user_id, title, subtitle, content, cover, status, category_id });
+      const res = await createArticle({
+        subtitle: summary,
+        category_id: category,
+        user_id,
+        title,
+        content,
+        cover,
+        status,
+        weight,
+        origin,
+      });
       articleID = res.dataValues.id;
-      await createArticleTag({ article_id: articleID, tag_ids });
+      await createArticleTag({ article_id: articleID, tag_ids: tags });
       ctx.body = {
         code: 0,
         message: '添加文章成功',
@@ -80,8 +95,28 @@ class ArticleController {
   /**根据文章id获取文章详情 */
   async getByID(ctx) {
     const { id } = ctx.params;
+    console.log(id);
     try {
       const res = await getArticleByID(id);
+      if (!res) {
+        return ctx.app.emit('error', articleNotFoundError, ctx);
+      }
+      ctx.body = {
+        code: 0,
+        message: '获取文章详情成功',
+        data: res,
+      };
+    } catch (err) {
+      return ctx.app.emit('error', articleGetError, ctx);
+    }
+  }
+
+  /**根据article_id获取文章详情*/
+  async getByArticleID(ctx) {
+    const { article_id } = ctx.params;
+    console.log('######', article_id);
+    try {
+      const res = await getArticleByArticleID(article_id);
       if (!res) {
         return ctx.app.emit('error', articleNotFoundError, ctx);
       }
@@ -180,6 +215,9 @@ class ArticleController {
   /** 更新文章 */
   async updateOneByID(ctx) {
     const { id } = ctx.params;
+    const { tags } = ctx.request.body;
+    const { category } = ctx.request.body;
+    ctx.request.body.category_id = category;
     try {
       const res = await updateArticleByID(id, ctx.request.body);
       if (!res) {
@@ -188,6 +226,8 @@ class ArticleController {
       if (!res[0]) {
         return ctx.app.emit('error', articleNotFoundError, ctx);
       }
+      // 更新文章标签表
+      await createArticleTag({ article_id: id, tag_ids: tags });
       ctx.body = {
         code: 0,
         message: '更新文章成功',
@@ -225,6 +265,51 @@ class ArticleController {
       };
     } catch (err) {
       return ctx.app.emit('error', articleUpdateError, ctx);
+    }
+  }
+
+  /**上传文章背景图片 */
+  async uploadCover(ctx) {
+    const { avatar_Img } = ctx.request.files || {};
+
+    const fileTypes = ['image/jpeg', 'image/png'];
+    if (avatar_Img) {
+      if (!fileTypes.includes(avatar_Img.mimetype)) {
+        return ctx.app.emit('error', unSupportedFileType, ctx);
+      }
+      // 文件名 *.jpg
+      const filename = avatar_Img.newFilename;
+      ctx.body = {
+        code: 0,
+        message: '文章图片上传成功',
+        data: {
+          avatar_Img: filename,
+        },
+      };
+    } else {
+      return ctx.app.emit('error', fileUploadError, ctx);
+    }
+  }
+
+  /**上传文章内容图片 */
+  async uploadImgs(ctx) {
+    const { uploadImg } = ctx.request.files || {};
+    const fileTypes = ['image/jpeg', 'image/png'];
+    if (uploadImg) {
+      if (!fileTypes.includes(uploadImg.mimetype)) {
+        return ctx.app.emit('error', unSupportedFileType, ctx);
+      }
+      // 文件名 *.jpg
+      const filename = uploadImg.newFilename;
+      ctx.body = {
+        code: 0,
+        message: '',
+        data: {
+          Url: `http://localhost:${APP_PORT}/${filename}`,
+        },
+      };
+    } else {
+      return ctx.app.emit('error', fileUploadError, ctx);
     }
   }
 }

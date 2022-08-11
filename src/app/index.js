@@ -48,6 +48,8 @@ app.use(
  * 访问：http://localhost:8000/0a0a6907d15073ff33c9a6900.jpg
  */
 app.use(KoaStatic(path.join(__dirname, '../upload')));
+app.use(KoaStatic(path.join(__dirname, '../upload/airticlecover')));
+app.use(KoaStatic(path.join(__dirname, '../upload/articleimg')));
 
 app.use(parameter(app));
 app.use(logger);
