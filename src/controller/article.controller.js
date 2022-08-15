@@ -1,3 +1,4 @@
+const moment = require('moment');
 const {
   createArticle,
   createArticleTag,
@@ -77,14 +78,39 @@ class ArticleController {
   /**分页获取文章 */
   async getAllByPage(ctx) {
     const { pageNum = 1, pageSize = 10, status, origin, weight, keyword } = ctx.request.query;
+    let datefrom = null;
+    let dateto = null;
+    if (ctx.request.query['createdAt[]']) {
+      const timeFrom = ctx.request.query['createdAt[]'][0];
+      const timeTo = ctx.request.query['createdAt[]'][1];
+      datefrom = new Date(timeFrom.slice(1, timeFrom.length - 1));
+      dateto = new Date(timeTo.slice(1, timeFrom.length - 1));
+      // 日期需要加一天
+      dateto = dateto.setDate(dateto.getDate() + 1);
+      // datefrom = datefrom.setDate(datefrom.getDate() - 1);
+
+      // console.log(moment(dateto).format('YYYY-MM-DD'));
+      // console.log(moment(datefrom).format('YYYY-MM-DD'));
+    } else {
+      // TODO
+      dateto = new Date();
+      // // datefrom设置为2年前
+      datefrom = moment(dateto).subtract(2, 'year').toDate();
+    }
+
+    // console.log('############', new Date());
+    // console.log('############', new Date(timeFrom.slice(1, timeFrom.length - 1)));
+    // console.log('############', new Date(timeTo.slice(1, timeFrom.length - 1)));
+
     try {
-      const res = await getAllArticleByPage(pageNum, pageSize, status, origin, weight, keyword);
+      const res = await getAllArticleByPage(pageNum, pageSize, status, origin, weight, keyword, datefrom, dateto);
       ctx.body = {
         code: 0,
         message: '获取文章列表成功',
         data: res,
       };
     } catch (err) {
+      console.log('err', err);
       return ctx.app.emit('error', articleGetError, ctx);
     }
   }

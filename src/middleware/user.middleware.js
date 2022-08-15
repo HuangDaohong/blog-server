@@ -33,10 +33,8 @@ const verifyUser = async (ctx, next) => {
   const { id } = ctx.params;
   try {
     // 1、判断修改的用户
-    console.log(ctx.state.user);
-    console.log(typeof id);
     if (Number(id) !== ctx.state.user.id) {
-      if (ctx.state.role !== 1) return ctx.app.emit('error', hasNotAdminPermission, ctx);
+      if (ctx.state.user.role !== 1) return ctx.app.emit('error', hasNotAdminPermission, ctx);
     }
     // 3、校验数据
     const res = await getUserInfo({ name, email, id });
@@ -63,7 +61,7 @@ const verifyUserCreate = async (ctx, next) => {
       return;
     }
   } catch (err) {
-    ctx.app.emit('error', userDoesNotExist, ctx);
+    ctx.app.emit('error', userRegisterError, ctx);
     return;
   }
 

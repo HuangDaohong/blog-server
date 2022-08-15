@@ -56,7 +56,21 @@ class ArticleService {
   }
 
   /**分页获取文章 */
-  async getAllArticleByPage(pageNum, pageSize, status, origin, weight, keyword) {
+  async getAllArticleByPage(pageNum, pageSize, status, origin, weight, keyword, datefrom, dateto) {
+    let datewhere = null;
+    if (datefrom != null && dateto != null) {
+      datewhere = {
+        createdAt: {
+          [Op.between]: [datefrom, dateto],
+        },
+      };
+      // datewhere = {
+      //   createdAt: {
+      //     [Op.lt]: dateto,
+      //     [Op.gt]: datefrom,
+      //   },
+      // };
+    }
     const { count, rows } = await Article.findAndCountAll({
       include: [
         {
@@ -80,7 +94,14 @@ class ArticleService {
         weight: {
           [Op.in]: weight ? [weight] : [0, 1, 2],
         },
-        title: keyword ? { [Op.like]: `%${keyword}%` } : { [Op.ne]: null },
+        createdAt: {
+          [Op.between]: [datefrom, dateto],
+        },
+        [Op.or]: [
+          { title: keyword ? { [Op.like]: `%${keyword}%` } : { [Op.ne]: null } },
+          { subtitle: keyword ? { [Op.like]: `%${keyword}%` } : { [Op.ne]: null } },
+          // { createdAt: datefrom && dateto ? { [Op.between]: [datefrom, dateto] } : { [Op.ne]: null }},
+        ],
       },
       distinct: true, //去重,它返回的 count 不会把你的 include 的数量算进去
       order: [['createdAt', 'DESC']],

@@ -34,13 +34,13 @@ const router = new Router({ prefix: '/users' });
 // );
 
 // 管理员端——注册接口  {name,email,password}
-router.post('/', userValidator, hadAdminPermission, verifyUserCreate, crpytPassword, register);
+router.post('/',auth,userValidator, hadAdminPermission, verifyUserCreate, crpytPassword, register);
 
 // 登录接口 {name/email,password}
 router.post('/login', verifyLogin, login);
 
 // 修改用户信息接口{name/email/password/avatar..}
-router.put('/:id', auth, hadAdminPermission, verifyUser, updateUserInfomation);
+router.put('/:id', auth, verifyUser, updateUserInfomation);
 
 // 用户修改密码
 router.patch('/:id', auth, verifyPass, crpytPassword, updateUserPassword);
