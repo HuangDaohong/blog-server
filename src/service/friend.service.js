@@ -10,6 +10,15 @@ class FriendService {
     return await Friend.findAndCountAll();
   }
 
+  // 查询一条数据
+  async findOneById(id) {
+    return await Friend.findOne({
+      where: {
+        id,
+      },
+    });
+  }
+
   // 删除数据
   async removeFriend(id) {
     const res = await Friend.destroy({

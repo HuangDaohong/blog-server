@@ -7,7 +7,7 @@ const {
   noToken,
   hasNotAdminPermission,
   UNKNOWN_ERROR,
-  PARAM_ERROR
+  PARAM_ERROR,
 } = require('../constant/err.type');
 
 const auth = async (ctx, next) => {
@@ -40,8 +40,7 @@ const auth = async (ctx, next) => {
 const hadAdminPermission = async (ctx, next) => {
   const { role } = ctx.state.user;
 
-  if (role !== 1) {
-    console.error('没有管理员的权限', ctx.state.user);
+  if (Number(role) !== 1) {
     return ctx.app.emit('error', hasNotAdminPermission, ctx);
   }
 
@@ -63,5 +62,5 @@ const validator = (rules) => {
 module.exports = {
   auth,
   hadAdminPermission,
-  validator
+  validator,
 };

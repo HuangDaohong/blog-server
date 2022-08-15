@@ -32,7 +32,7 @@ const Friend = seq.define(
       type: DataTypes.STRING,
       allowNull: true,
       comment: '友链描述',
-    }
+    },
   },
   {
     freezeTableName: true,

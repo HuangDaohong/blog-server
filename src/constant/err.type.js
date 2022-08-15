@@ -8,38 +8,38 @@ module.exports = {
   // 数据格式错误
   PARAM_ERROR: {
     code: '20001',
-    message: '传入数据格式错误',
+    message: '传入数据格式错误😅',
     data: '',
   },
 
   userFormateError: {
     code: '10001',
-    message: '用户名或密码或邮箱为空',
+    message: '用户名或密码或邮箱为空😅',
     data: '',
   },
   userAlreadyExited: {
     code: '10002',
-    message: '用户或邮箱已经存在',
+    message: '用户或邮箱已经存在😅',
     data: '',
   },
   userRegisterError: {
     code: '10003',
-    message: '用户注册错误',
+    message: '用户注册错误😅',
     data: '',
   },
   userDoesNotExist: {
     code: '10004',
-    message: '用户不存在',
+    message: '非法用户😅',
     data: '',
   },
   userLoginError: {
     code: '10005',
-    message: '用户登录失败',
+    message: '用户登录失败😅',
     data: '',
   },
   invalidPassword: {
     code: '10006',
-    message: '密码不匹配',
+    message: '密码不匹配💢',
     data: '',
   },
   getUserInfoError: {
@@ -49,22 +49,32 @@ module.exports = {
   },
   tokenExpiredError: {
     code: '10101',
-    message: 'token已过期',
+    message: 'token已过期💢',
     data: '',
   },
   invalidToken: {
     code: '10102',
-    message: '无效的token',
+    message: '无效的token😅',
     data: '',
   },
   hasNotAdminPermission: {
     code: '10103',
-    message: '没有管理员权限',
+    message: '你不是管理员😅😅😅',
     data: '',
   },
   noToken: {
     code: '10104',
     message: '没有token',
+    data: '',
+  },
+  userUpdateError:{
+    code: '10105',
+    message: '用户更新失败',
+    data: '',
+  },
+  invalidOldPassword:{
+    code: '10106',
+    message: '旧密码不正确',
     data: '',
   },
   fileUploadError: {
@@ -121,7 +131,7 @@ module.exports = {
   },
   categoryDelerror: {
     code: '10403',
-    message: '删除分类失败,删除失败，可能存在关联文章',
+    message: '删除分类失败,可能存在关联文章 😅',
     data: '',
   },
   categoryUpdateError: {

@@ -1,4 +1,4 @@
-const { createFriend, finAllFriends, removeFriend, updateFriendByID } = require('../service/friend.service');
+const { createFriend, finAllFriends, removeFriend, updateFriendByID,findOneById } = require('../service/friend.service');
 const { friendAddError, friendGeterror, friendDelerror, friendUpdateError } = require('../constant/err.type');
 class FriendController {
   // 添加友链
@@ -22,6 +22,20 @@ class FriendController {
       ctx.body = {
         code: 0,
         message: '获取友链列表成功',
+        data: res,
+      };
+    } catch (err) {
+      return ctx.app.emit('error', friendGeterror, ctx);
+    }
+  }
+
+  // 获取友链详情
+  async findOne(ctx) {
+    try {
+      const res = await findOneById(ctx.params.id);
+      ctx.body = {
+        code: 0,
+        message: '获取友链详情成功',
         data: res,
       };
     } catch (err) {

@@ -2,7 +2,14 @@ const Router = require('koa-router');
 
 const { verifyIsExisted } = require('../middleware/category.middleware');
 const { auth, hadAdminPermission, validator } = require('../middleware/auth.middleware');
-const { add, finAll, deleteCategory, updateCategory, findOne,finAllByPage } = require('../controller/category.controller');
+const {
+  add,
+  finAll,
+  deleteCategory,
+  updateCategory,
+  findOne,
+  finAllByPage,
+} = require('../controller/category.controller');
 
 const router = new Router({ prefix: '/category' });
 

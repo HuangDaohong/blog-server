@@ -9,7 +9,7 @@ const router = new Router({ prefix: '/tags' });
 
 // 添加标签 {tag:name}
 router.post(
-  '/addtag',
+  '/',
   auth,
   hadAdminPermission,
   validator({
@@ -27,11 +27,11 @@ router.get('/', finAll);
 
 // note：文章设置表会自动删除对应的article_tag表中的文章id和标签id
 // 删除标签{id}
-router.post('/delete', auth, hadAdminPermission, deleteTag);
+router.delete('/:id', auth, hadAdminPermission, deleteTag);
 
 // 修改标签 {id,?name,?description}
-router.post(
-  '/update',
+router.put(
+  '/:id',
   auth,
   hadAdminPermission,
   validator({

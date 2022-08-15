@@ -1,5 +1,5 @@
 const Router = require('koa-router');
-const { verifyIsExisted,koabodysettings ,koabodyImgsettings} = require('../middleware/article.middleware');
+const { verifyIsExisted, koabodysettings, koabodyImgsettings } = require('../middleware/article.middleware');
 const { auth, hadAdminPermission, validator } = require('../middleware/auth.middleware');
 const {
   add,
@@ -78,8 +78,8 @@ router.patch('/:id/view', increaseViews);
 router.patch('/:id/like', increaseLikes);
 
 // 上传背景图片
-router.post('/uploadcover', auth, koabodysettings, uploadCover);
+router.post('/uploadcover', auth, hadAdminPermission, koabodysettings, uploadCover);
 
 // bytemd上传文章图片
-router.post('/uploadimgs', auth, koabodyImgsettings, uploadImgs);
+router.post('/uploadimgs', auth, hadAdminPermission, koabodyImgsettings, uploadImgs);
 module.exports = router;

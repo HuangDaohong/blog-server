@@ -1,4 +1,11 @@
-const { createCategory, finAllCategorys, removeCategory, updateCategory,findOneById,finAllCategorysByPage } = require('../service/category.service');
+const {
+  createCategory,
+  finAllCategorys,
+  removeCategory,
+  updateCategory,
+  findOneById,
+  finAllCategorysByPage,
+} = require('../service/category.service');
 const {
   categoryAddError,
   categoryGeterror,
@@ -28,7 +35,7 @@ class CategoryController {
     const { id } = ctx.params;
     try {
       const res = await findOneById(id);
-      if(!res) {
+      if (!res) {
         return ctx.app.emit('error', invalidCategoryID, ctx);
       }
       ctx.body = {
@@ -45,7 +52,6 @@ class CategoryController {
   async finAll(ctx) {
     try {
       const res = await finAllCategorys();
-      console.log(res);
       ctx.body = {
         code: 0,
         message: '获取分类列表成功',
@@ -58,7 +64,7 @@ class CategoryController {
 
   // 分页获取分类列表
   async finAllByPage(ctx) {
-    const { pageNum=1, pageSize=10 } = ctx.request.query;
+    const { pageNum = 1, pageSize = 10 } = ctx.request.query;
     try {
       const res = await finAllCategorysByPage(pageNum, pageSize);
       ctx.body = {
@@ -73,14 +79,19 @@ class CategoryController {
 
   // 删除分类
   async deleteCategory(ctx) {
-    const res = await removeCategory(ctx.request.body.id);
-    if (res) {
-      ctx.body = {
-        code: 0,
-        message: '删除分类成功',
-        data: '',
-      };
-    } else {
+    console.log('@@@', ctx.request.body.id);
+    try {
+      const res = await removeCategory(ctx.request.body.id);
+      if (res) {
+        ctx.body = {
+          code: 0,
+          message: '删除分类成功',
+          data: '',
+        };
+      } else {
+        return ctx.app.emit('error', categoryDelerror, ctx);
+      }
+    } catch (err) {
       return ctx.app.emit('error', categoryDelerror, ctx);
     }
   }

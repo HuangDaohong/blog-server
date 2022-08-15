@@ -127,7 +127,7 @@ class ArticleService {
 
   // 根据article_id获取文章,文章访问量+1
   async getArticleByArticleID(articleID) {
-    console.log('articleID:@@@@@@@@', articleID);
+    // console.log('articleID:@@@@@@@@', articleID);
     const res = await Article.findOne({
       include: [
         {
@@ -268,7 +268,6 @@ class ArticleService {
         return false;
       }
     }
-
     return await Article.update(articleInfo, { where: { id: articleID } });
   }
 

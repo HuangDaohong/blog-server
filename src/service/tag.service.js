@@ -29,9 +29,9 @@ class TagService {
   }
 
   // 修改数据
-  async updateTag(tag) {
+  async updateTag(id, tag) {
     const res = await Tag.update(tag, {
-      where: { id: tag.id },
+      where: { id: id },
     });
     return res[0];
   }

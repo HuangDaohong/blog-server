@@ -24,6 +24,11 @@ const Comment = seq.define(
       allowNull: true,
       comment: '父评论id',
     },
+    reply_comment_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      comment: '回复评论id',
+    },
     comment_equipment: {
       type: DataTypes.STRING(),
       allowNull: true,
@@ -34,7 +39,7 @@ const Comment = seq.define(
     freezeTableName: true,
   }
 );
-//直接执行这个就行Comment.sync({ alter: true })
+//直接执行这个就行,联表,Comment.sync({ alter: true })
 Comment.belongsTo(User, {
   foreignKey: 'user_id',
 });

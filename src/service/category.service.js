@@ -33,13 +33,11 @@ class CategoryService {
 
   // 分页查询数据
   async finAllCategorysByPage(pageNum, pageSize) {
-    console.log(pageNum, pageSize,'@@');
-    let res = await Category.findAndCountAll(
-      {
-        limit: +pageSize,
-        offset: (pageNum - 1) * pageSize,
-      },
-    );
+    // console.log(pageNum, pageSize,'@@');
+    let res = await Category.findAndCountAll({
+      limit: +pageSize,
+      offset: (pageNum - 1) * pageSize,
+    });
     for (let i = 0; i < res.rows.length; i++) {
       let articleCount = await Article.count({
         where: {
@@ -61,7 +59,7 @@ class CategoryService {
     const res = await Category.destroy({
       where: { id },
     });
-    return res > 0 ? true : false;
+    return res === 1 ? true : false;
   }
 
   // 修改数据

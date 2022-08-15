@@ -1,7 +1,5 @@
 const { DataTypes } = require('sequelize');
 const seq = require('../db/seq');
-const Article = require('./article.model');
-const ArticleTag = require('./article_tag.model');
 
 const Tag = seq.define(
   'tb_tag',
@@ -25,7 +23,7 @@ const Tag = seq.define(
       comment: '标签描述',
     },
     background: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.STRING(500),
       allowNull: true,
       defaultValue: 'default.jpg',
       comment: '标签背景图',

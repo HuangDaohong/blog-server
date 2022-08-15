@@ -26,7 +26,7 @@ const seq = new Sequelize(MYSQL_DB, MYSQL_USER, MYSQL_PWD, {
       acquire: 30000,
       idle: 10000, // 如果一个线程 10 秒钟内没有被使用过的话，那么就释放线程
     },
-    
+
     //配置(好像没啥用啊):如果没有加 dialectOptions 配置上的 typeCast 属性值为 true的话，返回的时间是 ISO 标准时间日期字符。（如：'2022-04-16T15:02:08.017Z'）
     // dialectOptions: {
     //   // 时间格式化，返回字符串

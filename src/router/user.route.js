@@ -2,11 +2,13 @@ const Router = require('koa-router');
 
 const {
   userValidator,
-  userValidatorLogin,
+  // userValidatorLogin,
   verifyUser,
   crpytPassword,
   verifyLogin,
-  koabodysettings
+  koabodysettings,
+  verifyPass,
+  verifyUserCreate,
 } = require('../middleware/user.middleware');
 
 const { auth, hadAdminPermission } = require('../middleware/auth.middleware');
@@ -20,7 +22,8 @@ const {
   getUserInfo,
   getUserList,
   getUserListByPage,
-  uploadAvatar
+  uploadAvatar,
+  updateUserPassword,
 } = require('../controller/user.controller');
 
 const router = new Router({ prefix: '/users' });
@@ -30,21 +33,23 @@ const router = new Router({ prefix: '/users' });
 // }
 // );
 
-// 注册接口  {name,email,password}
-router.post('/register', userValidator, verifyUser, crpytPassword, register);
+// 管理员端——注册接口  {name,email,password}
+router.post('/', userValidator, hadAdminPermission, verifyUserCreate, crpytPassword, register);
 
 // 登录接口 {name/email,password}
-router.post('/login', userValidatorLogin, verifyLogin, login);
+router.post('/login', verifyLogin, login);
 
 // 修改用户信息接口{name/email/password/avatar..}
-router.post('/updateuserinfo', auth, verifyUser, crpytPassword, updateUserInfomation);
+router.put('/:id', auth, hadAdminPermission, verifyUser, updateUserInfomation);
+
+// 用户修改密码
+router.patch('/:id', auth, verifyPass, crpytPassword, updateUserPassword);
 
 // 用户上传头像接口
 router.post('/uploadavatar', auth, koabodysettings, uploadAvatar);
 
-
 // 删除用户接口 {id}
-router.post('/deluser', auth, hadAdminPermission, deleteUser);
+router.delete('/:id', auth, hadAdminPermission, deleteUser);
 
 // 禁言某用户 {id}
 router.post('/disableusercomment', auth, hadAdminPermission, disableusercomment);
@@ -56,6 +61,6 @@ router.post('/getuserinfo', auth, hadAdminPermission, getUserInfo);
 router.get('/getuserlist', auth, hadAdminPermission, getUserList);
 
 // 分页获取用户列表接口
-router.post('/getuserlist', auth, hadAdminPermission, getUserListByPage);
+router.get('/', auth, getUserListByPage);
 
-module.exports = router; 
+module.exports = router;

@@ -8,29 +8,29 @@ const {
   deleteById,
   getUserList,
   getUserListPage,
+  getLoginUserInfo,
 } = require('../service/user.service');
-const { userRegisterError, unSupportedFileType, fileUploadError, getUserInfoError } = require('../constant/err.type');
+const {
+  userRegisterError,
+  unSupportedFileType,
+  fileUploadError,
+  getUserInfoError,
+  userLoginError,
+} = require('../constant/err.type');
 
 const { JWT_SECRET } = require('../config/config.default');
 
 class UserController {
   async register(ctx, next) {
-    // 1. 获取数据
-    const { name, password, email } = ctx.request.body;
-    // 2. 操作数据库
     try {
-      const res = await createUser(name, password, email);
-      // 3. 返回结果
+      const res = await createUser(ctx.request.body);
       ctx.body = {
         code: 0,
         message: '用户注册成功',
-        data: {
-          id: res.id,
-          name: res.name,
-          email: res.email,
-        },
+        data: res,
       };
     } catch (err) {
+      console.log('注册失败');
       return ctx.app.emit('error', userRegisterError, ctx);
     }
   }
@@ -39,8 +39,8 @@ class UserController {
     const { name, email } = ctx.request.body;
 
     try {
-      const { password, ...res } = await getUserInfo({ name, email });
-      res.token = jwt.sign(res, JWT_SECRET, { expiresIn: '2d' });
+      const { password, ...res } = await getLoginUserInfo({ name, email });
+      res.token = jwt.sign(res, JWT_SECRET, { expiresIn: '7d' });
       ctx.body = {
         code: 0,
         message: '用户登录成功',
@@ -53,10 +53,8 @@ class UserController {
 
   // 修改用户信息 ,修改之后客户端应重新登录
   async updateUserInfomation(ctx, next) {
-    const { id } = ctx.state.user;
-    // console.log(ctx.state.user);
-    const { name, password, email, avatar } = ctx.request.body;
-    if (await updateById({ id, name, password, email, avatar })) {
+    const { id } = ctx.params;
+    if (await updateById(id, ctx.request.body)) {
       ctx.body = {
         code: 0,
         message: '修改信息成功',
@@ -71,6 +69,27 @@ class UserController {
     }
   }
 
+  // 修改密码
+  async updateUserPassword(ctx) {
+    const { id } = ctx.params;
+    try {
+      if (await updateById(id, ctx.request.body)) {
+        ctx.body = {
+          code: 0,
+          message: '修改信息成功',
+          data: '',
+        };
+      } else {
+        ctx.body = {
+          code: '1',
+          message: '修改密码失败',
+          data: '',
+        };
+      }
+    } catch (err) {
+      return ctx.app.emit('error', userUpdateError, ctx);
+    }
+  }
   // 用户上传头像接口
   async uploadAvatar(ctx) {
     const { id } = ctx.state.user;
@@ -117,7 +136,7 @@ class UserController {
 
   // 管理员删除用户
   async deleteUser(ctx, next) {
-    const { id } = ctx.request.body;
+    const { id } = ctx.params;
     if (await deleteById({ id })) {
       ctx.body = {
         code: 0,
@@ -186,7 +205,7 @@ class UserController {
 
   // 获取用户列表 分页
   async getUserListByPage(ctx) {
-    let { pageNum = 1, pageSize = 5 } = ctx.request.body;
+    let { pageNum = 1, pageSize = 5 } = ctx.request.query;
     let res = await getUserListPage({ pageNum, pageSize });
     if (res) {
       ctx.body = {

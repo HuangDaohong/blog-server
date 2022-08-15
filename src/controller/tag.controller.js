@@ -33,7 +33,7 @@ class TagController {
 
   // 删除标签
   async deleteTag(ctx, next) {
-    const res = await removeTag(ctx.request.body.id);
+    const res = await removeTag(ctx.params.id);
     if (res) {
       ctx.body = {
         code: 0,
@@ -47,8 +47,9 @@ class TagController {
 
   // 修改标签
   async updateTag(ctx, next) {
+    const {id}=ctx.request.params
     try {
-      const res = await updateTag(ctx.request.body);
+      const res = await updateTag(id,ctx.request.body);
       if (res) {
         ctx.body = {
           code: 0,

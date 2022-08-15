@@ -35,7 +35,7 @@ const Article = seq.define(
       comment: '文章内容',
     },
     cover: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.STRING(500),
       allowNull: true,
       comment: '文章封面地址',
     },
@@ -87,7 +87,7 @@ const Article = seq.define(
       type: DataTypes.INTEGER,
       defaultValue: 0,
       comment: '文章评论数',
-    }
+    },
   },
   {
     freezeTableName: true,

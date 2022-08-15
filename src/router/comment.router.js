@@ -9,7 +9,8 @@ const {
   deleteMany,
   deleteOne,
   updateOne,
-  getAllByArticleId
+  getAllByArticleId,
+  getallAndChildren,
 } = require('../controller/comment.controller');
 
 const router = new Router({ prefix: '/comment' });
@@ -33,6 +34,9 @@ router.get('/all', getAll);
 
 // 分页获取评论列表
 router.get('/', getAllByPage);
+
+// 分页获取评论列表,包含子组件评论
+router.get('/all/child', getallAndChildren);
 
 // 根据文章id获取评论列表
 router.get('/article/:id', getAllByArticleId);

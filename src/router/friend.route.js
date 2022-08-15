@@ -1,7 +1,7 @@
 const Router = require('koa-router');
 
 const { auth, hadAdminPermission } = require('../middleware/auth.middleware');
-const { add, finAll, deleteFriend, updateFriend } = require('../controller/friend.controller');
+const { add, finAll, deleteFriend, updateFriend, findOne } = require('../controller/friend.controller');
 
 const router = new Router({ prefix: '/friend' });
 
@@ -10,6 +10,9 @@ router.post('/', auth, hadAdminPermission, add);
 
 // 获取友链列表
 router.get('/', finAll);
+
+// 获取友链详情
+router.get('/:id', findOne);
 
 // // 删除友链
 router.delete('/:id', auth, hadAdminPermission, deleteFriend);

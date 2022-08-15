@@ -39,7 +39,7 @@ class CommentService {
       include: [
         {
           model: User,
-          attributes: ['id', 'name', 'avatar'],
+          attributes: ['id', 'name', 'avatar', 'email', 'role', 'ip', 'address', 'client'],
         },
       ],
       distinct: true, //去重,它返回的 count 不会把你的 include 的数量算进去
@@ -47,6 +47,67 @@ class CommentService {
       limit: pageSize * 1,
       order: [['createdAt', 'DESC']],
     });
+    return {
+      total: count,
+      list: rows,
+      pageNum,
+      pageSize,
+    };
+  }
+
+  // 根据parend_comment_id字段分页获取包含children的评论列表,包含子组件评论
+  async getAllCommentAndChildrenByPage(pageNum, pageSize) {
+    console.log(pageNum, pageSize);
+    const { count, rows } = await Comment.findAndCountAll({
+      include: [
+        {
+          model: User,
+          attributes: ['id', 'name', 'avatar', 'email', 'ip', 'address', 'client'],
+        },
+      ],
+      where: { parent_comment_id: null },
+      distinct: true, //去重,它返回的 count 不会把你的 include 的数量算进去
+      offset: (pageNum - 1) * pageSize,
+      limit: pageSize * 1,
+      order: [['createdAt', 'DESC']],
+    });
+
+    // 获取子评论
+    for (let i = 0; i < rows.length; i++) {
+      const { id } = rows[i];
+      const { count: childcount, rows: childRows } = await Comment.findAndCountAll({
+        include: [
+          {
+            model: User,
+            attributes: ['id', 'name', 'avatar', 'email', 'ip', 'address', 'client'],
+          },
+        ],
+        where: { parent_comment_id: id },
+        distinct: true,
+        order: [['createdAt', 'ASC']],
+      });
+
+      if (childcount > 0) {
+        for (let j = 0; j < childRows.length; j++) {
+          if (childRows[j].reply_comment_id !== null) {
+            const replyComment = await Comment.findOne({
+              attributes: ['id', 'content'],
+              where: { id: childRows[j].reply_comment_id },
+              include: [
+                {
+                  model: User,
+                  attributes: ['name', 'avatar'],
+                },
+              ],
+            });
+            childRows[j].dataValues.replyComment = replyComment;
+          }
+        }
+
+        rows[i].dataValues.children = childRows;
+      }
+    }
+
     return {
       total: count,
       list: rows,
@@ -67,6 +128,12 @@ class CommentService {
 
   // 删除单个评论
   async deleteOneComment(id) {
+    // 先删掉子评论
+    await Comment.destroy({
+      where: {
+        parent_comment_id: id,
+      },
+    });
     const res = await Comment.destroy({
       where: { id },
     });

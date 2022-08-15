@@ -1,5 +1,3 @@
-// const path = require('path');
-// const fs = require('fs');
 const {
   createArticle,
   createArticleTag,
@@ -33,11 +31,11 @@ class ArticleController {
     console.log('##########', ctx.request.body);
     const user_id = ctx.state.user.id;
     const { tags = [] } = ctx.request.body;
-    const { title, summary, content, cover, status, category, origin, weight } = ctx.request.body;
+    const { title, subtitle, content, cover, status, category, origin, weight } = ctx.request.body;
     let articleID = null;
     try {
       const res = await createArticle({
-        subtitle: summary,
+        subtitle,
         category_id: category,
         user_id,
         title,
@@ -79,7 +77,6 @@ class ArticleController {
   /**分页获取文章 */
   async getAllByPage(ctx) {
     const { pageNum = 1, pageSize = 10, status, origin, weight, keyword } = ctx.request.query;
-    // console.log(ctx.request.query, '&&&&&&&&&&&&&&&&&&&&&&',status, origin, weight, keyword);
     try {
       const res = await getAllArticleByPage(pageNum, pageSize, status, origin, weight, keyword);
       ctx.body = {
