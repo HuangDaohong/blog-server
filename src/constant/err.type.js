@@ -242,4 +242,27 @@ module.exports = {
     message: '修改友链失败',
     data: '',
   },
+
+  // 网站日志
+  weblogAddError: {
+    code: '10901',
+    message: '添加网站日志失败',
+    data: '',
+  },
+  weblogGetError: {
+    code: '10902',
+    message: '获取网站日志失败',
+    data: '',
+  },
+  weblogDelError: {
+    code: '10903',
+    message: '删除网站日志失败',
+    data: '',
+  },
+  weblogUpdateError: {
+    code: '10904',
+    message: '修改网站日志失败',
+    data: '',
+  }
+
 };

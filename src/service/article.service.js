@@ -58,7 +58,7 @@ class ArticleService {
   /**分页获取文章 */
   async getAllArticleByPage(pageNum, pageSize, status, origin, weight, keyword, datefrom, dateto) {
     let datewhere = null;
-    if (datefrom != null && dateto != null) {
+    if (datefrom !== null && dateto !== null) {
       datewhere = {
         createdAt: {
           [Op.between]: [datefrom, dateto],
@@ -81,7 +81,7 @@ class ArticleService {
         {
           model: Tag,
           attributes: ['id', 'name', 'color', 'background'],
-          through: { attributes: [] }, //就不查tb_article_tag了
+          through: { attributes: [] },
         },
       ],
       where: {
