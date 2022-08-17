@@ -92,7 +92,9 @@ const verifyPass = async (ctx, next) => {
     // 1、判断修改的用户
     console.log(ctx.state.user);
     if (Number(id) !== ctx.state.user.id) {
-      if (ctx.state.role !== 1) return ctx.app.emit('error', hasNotAdminPermission, ctx);
+      if (ctx.state.user.role !== 1) {
+        return ctx.app.emit('error', hasNotAdminPermission, ctx);
+      }
     }
 
     const res = await getUserInfoByID({ id });

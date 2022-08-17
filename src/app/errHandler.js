@@ -14,7 +14,7 @@ module.exports = (err, ctx) => {
   }
   ctx.status = status;
   ctx.body = err;
-  console.log('=============errHandler==========Start===========');
+  console.log('=============err==========Start===========');
   console.log(err);
-  console.log('=============errHandler===========End==========');
+  console.log('=============err===========End============');
 };

@@ -34,19 +34,19 @@ const router = new Router({ prefix: '/users' });
 // );
 
 // 管理员端——注册接口  {name,email,password}
-router.post('/',auth,userValidator, hadAdminPermission, verifyUserCreate, crpytPassword, register);
+router.post('/', auth, userValidator, hadAdminPermission, verifyUserCreate, crpytPassword, register);
 
 // 登录接口 {name/email,password}
 router.post('/login', verifyLogin, login);
 
 // 修改用户信息接口{name/email/password/avatar..}
-router.put('/:id', auth, verifyUser, updateUserInfomation);
+router.put('/:id', auth, hadAdminPermission, verifyUser, updateUserInfomation);
 
 // 用户修改密码
-router.patch('/:id', auth, verifyPass, crpytPassword, updateUserPassword);
+router.patch('/:id', auth, hadAdminPermission, verifyPass, crpytPassword, updateUserPassword);
 
 // 用户上传头像接口
-router.post('/uploadavatar', auth, koabodysettings, uploadAvatar);
+router.post('/uploadavatar', auth, hadAdminPermission, koabodysettings, uploadAvatar);
 
 // 删除用户接口 {id}
 router.delete('/:id', auth, hadAdminPermission, deleteUser);

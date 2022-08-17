@@ -38,11 +38,11 @@ const auth = async (ctx, next) => {
 };
 
 const hadAdminPermission = async (ctx, next) => {
+  // console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', ctx.state.user);
   const { role } = ctx.state.user;
-  if (Number(role) !== 1) {
+  if (role !== 1) {
     return ctx.app.emit('error', hasNotAdminPermission, ctx);
   }
-
   await next();
 };
 

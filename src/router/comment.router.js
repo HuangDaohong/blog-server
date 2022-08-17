@@ -19,6 +19,7 @@ const router = new Router({ prefix: '/comment' });
 router.post(
   '/',
   auth,
+  hadAdminPermission,
   validator({
     // user_id: { type: 'number', required: true }, //使用state.user.id
     article_id: { type: 'number', required: true },
