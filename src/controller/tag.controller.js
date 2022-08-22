@@ -21,6 +21,10 @@ class TagController {
   async finAll(ctx, next) {
     try {
       const res = await finAllTags();
+      res?.rows.forEach(item => {
+        // 增加文章数目属性
+        item.dataValues.articleCount = item.dataValues.tb_articles.length;
+      } );
       ctx.body = {
         code: 0,
         message: '获取标签列表成功',

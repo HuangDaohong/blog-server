@@ -6,6 +6,7 @@ const {
   getAllArticle,
   getAllArticleByCategor,
   getAllArticleByPage,
+  getAllArticleByPage2,
   getArticleByID,
   getAllArticleByTag,
   getAllArticleByKeyword,
@@ -14,6 +15,7 @@ const {
   increaseViewsById,
   increaseLikesById,
   getArticleByArticleID,
+  getRecommendByPage,
 } = require('../service/article.service');
 const {
   articleAddError,
@@ -98,7 +100,7 @@ class ArticleController {
       datefrom = moment(dateto).subtract(2, 'year').toDate();
     }
 
-    console.log('!!!', datefrom, dateto);
+    // console.log('!!!', datefrom, dateto);
 
     // console.log('############', new Date());
     // console.log('############', new Date(timeFrom.slice(1, timeFrom.length - 1)));
@@ -106,6 +108,37 @@ class ArticleController {
 
     try {
       const res = await getAllArticleByPage(pageNum, pageSize, status, origin, weight, keyword, datefrom, dateto);
+      ctx.body = {
+        code: 0,
+        message: '获取文章列表成功',
+        data: res,
+      };
+    } catch (err) {
+      console.log('err', err);
+      return ctx.app.emit('error', articleGetError, ctx);
+    }
+  }
+  /**web 分页获取文章 */
+  async getAllByPage2(ctx) {
+    const { pageNum = 1, pageSize = 10, weight, keyword } = ctx.request.query;
+    try {
+      const res = await getAllArticleByPage2(pageNum, pageSize, weight, keyword);
+      ctx.body = {
+        code: 0,
+        message: '获取文章列表成功',
+        data: res,
+      };
+    } catch (err) {
+      console.log('err', err);
+      return ctx.app.emit('error', articleGetError, ctx);
+    }
+  }
+
+  /**web 随机获取推荐文章 */
+  async getRecommend(ctx) {
+    const { counts = 10 } = ctx.request.query;
+    try {
+      const res = await getRecommendByPage(counts);
       ctx.body = {
         code: 0,
         message: '获取文章列表成功',

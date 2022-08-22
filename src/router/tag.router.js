@@ -15,7 +15,6 @@ router.post(
   validator({
     name: 'string',
     description: { type: 'string', required: false },
-    background: { type: 'string', required: false },
     color: { type: 'string', required: false },
   }),
   verifyIsExisted,
@@ -37,7 +36,6 @@ router.put(
   validator({
     name: { type: 'string', required: false },
     description: { type: 'string', required: false },
-    background: { type: 'string', required: false },
     color: { type: 'string', required: false },
   }),
   verifyIsExisted,

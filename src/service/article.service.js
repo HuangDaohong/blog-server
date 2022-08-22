@@ -2,7 +2,7 @@ const Article = require('../model/article.model');
 const ArticeTag = require('../model/article_tag.model');
 const Tag = require('../model/tag.model');
 const Category = require('../model/category.model');
-// const seq = require('../db/seq');
+const seq = require('../db/seq');
 const { Op, QueryTypes } = require('sequelize');
 class ArticleService {
   // 新增文章
@@ -72,11 +72,12 @@ class ArticleService {
       // };
     }
     const { count, rows } = await Article.findAndCountAll({
+      attributes: { exclude: ['content'] }, //不包括deletedAt字段
       include: [
         {
           model: Category,
           as: 'categoryInfo',
-          attributes: ['id', 'name'],
+          attributes: ['id', 'name', 'background'],
         },
         {
           model: Tag,
@@ -115,6 +116,63 @@ class ArticleService {
       list: rows,
     };
   }
+  /** web  分页获取文章 */
+  async getAllArticleByPage2(pageNum, pageSize, weight, keyword) {
+    const { count, rows } = await Article.findAndCountAll({
+      attributes: { exclude: ['content', 'id'] }, //不包括deletedAt字段
+      include: [
+        {
+          model: Category,
+          as: 'categoryInfo',
+          attributes: ['id', 'name', 'background'],
+        },
+        {
+          model: Tag,
+          attributes: ['id', 'name', 'color', 'background'],
+          through: { attributes: [] },
+        },
+      ],
+      where: {
+        status: 0,
+        weight: {
+          [Op.in]: weight ? [weight] : [0, 1, 2],
+        },
+        [Op.or]: [
+          { title: keyword ? { [Op.like]: `%${keyword}%` } : { [Op.ne]: null } },
+          { subtitle: keyword ? { [Op.like]: `%${keyword}%` } : { [Op.ne]: null } },
+        ],
+      },
+      distinct: true, //去重,它返回的 count 不会把你的 include 的数量算进去
+      order: [['createdAt', 'DESC']],
+      limit: pageSize * 1,
+      offset: (pageNum - 1) * pageSize,
+    });
+    return {
+      pageNum,
+      pageSize,
+      total: count,
+      list: rows,
+    };
+  }
+
+  /* web 随机获取推荐文章 */
+  async getRecommendByPage(counts) {
+    const { count, rows } = await Article.findAndCountAll({
+      attributes: { exclude: ['content', 'id'] }, //不包括deletedAt字段
+      where: {
+        status: 0,
+        weight: 2,
+      },
+      // 随机获取
+      // order: [[seq.fn('RAND')]],
+      order: seq.random(),
+      limit: counts * 1,
+    });
+    return {
+      total: count,
+      list: rows,
+    };
+  }
 
   // 根据文章id获取文章,文章访问量+1
   async getArticleByID(articleID) {
@@ -127,7 +185,7 @@ class ArticleService {
         },
         {
           model: Tag,
-          attributes: ['id', 'name'],
+          attributes: ['id', 'name', 'color'],
           through: { attributes: [] },
         },
       ],
@@ -150,6 +208,7 @@ class ArticleService {
   async getArticleByArticleID(articleID) {
     // console.log('articleID:@@@@@@@@', articleID);
     const res = await Article.findOne({
+      exclude: ['id', 'createdAt', 'status'],
       include: [
         {
           model: Category,
@@ -158,7 +217,7 @@ class ArticleService {
         },
         {
           model: Tag,
-          attributes: ['id', 'name'],
+          attributes: ['id', 'name', 'color'],
           through: { attributes: [] },
         },
       ],
@@ -186,7 +245,7 @@ class ArticleService {
         },
         {
           model: Tag,
-          attributes: ['id', 'name'],
+          attributes: ['id', 'name', 'color'],
           through: { attributes: [] },
         },
       ],

@@ -6,6 +6,7 @@ const {
   getAll,
   getAllByCategory,
   getAllByPage,
+  getAllByPage2,
   getByID,
   getAllByTag,
   getAllByKeyword,
@@ -17,6 +18,7 @@ const {
   uploadCover,
   getByArticleID,
   uploadImgs,
+  getRecommend,
 } = require('../controller/article.controller');
 
 const router = new Router({ prefix: '/article' });
@@ -40,6 +42,12 @@ router.get('/all', getAll);
 
 // 分页获取文章列表 默认pageNum=1&pageSize=10
 router.get('/', getAllByPage);
+
+/* web端  获取文章列表，去掉草稿和删除的文章 */
+router.get('/web/all', getAllByPage2);
+
+/* web端 随机获取推荐文章列表 */
+router.get('/web/recommend', getRecommend);
 
 // 根据文章id获取文章详情，views+1
 router.get('/:id', getByID);

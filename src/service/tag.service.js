@@ -12,11 +12,13 @@ class TagService {
   // 查询所有数据
   async finAllTags() {
     return await Tag.findAndCountAll({
-      // include: [
-      //   {
-      //     model: Article,
-      //   },
-      // ],
+      include: [
+        {
+          model: Article,
+          attributes: ['id', 'article_id', 'title', 'subtitle', 'status'],
+        },
+      ],
+      distinct: true,
     });
   }
 
