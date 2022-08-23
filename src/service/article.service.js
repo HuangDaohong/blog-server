@@ -117,7 +117,7 @@ class ArticleService {
     };
   }
   /** web  分页获取文章 */
-  async getAllArticleByPage2(pageNum, pageSize, weight, keyword) {
+  async getAllArticleByPage2(pageNum, pageSize, weight, keyword, orderKey) {
     const { count, rows } = await Article.findAndCountAll({
       attributes: { exclude: ['content', 'id'] }, //不包括deletedAt字段
       include: [
@@ -143,7 +143,39 @@ class ArticleService {
         ],
       },
       distinct: true, //去重,它返回的 count 不会把你的 include 的数量算进去
-      order: [['createdAt', 'DESC']],
+      order: [[orderKey, 'DESC']],
+      limit: pageSize * 1,
+      offset: (pageNum - 1) * pageSize,
+    });
+    return {
+      pageNum,
+      pageSize,
+      total: count,
+      list: rows,
+    };
+  }
+  /** web  首页获取随机推荐的文章 */
+  async getAllArticleByPageRecommend(pageNum, pageSize) {
+    const { count, rows } = await Article.findAndCountAll({
+      attributes: { exclude: ['content', 'id'] }, //不包括deletedAt字段
+      include: [
+        {
+          model: Category,
+          as: 'categoryInfo',
+          attributes: ['id', 'name', 'background'],
+        },
+        {
+          model: Tag,
+          attributes: ['id', 'name', 'color', 'background'],
+          through: { attributes: [] },
+        },
+      ],
+      where: {
+        status: 0,
+        weight: 2,
+      },
+      distinct: true, //去重,它返回的 count 不会把你的 include 的数量算进去
+      order: seq.random(),
       limit: pageSize * 1,
       offset: (pageNum - 1) * pageSize,
     });
@@ -358,7 +390,7 @@ class ArticleService {
 
   // 文章点赞加1
   async increaseLikesById(articleID) {
-    return await Article.increment('likes', { by: 1, where: { id: articleID } });
+    return await Article.increment('likes', { by: 1, where: { article_id: articleID } });
   }
 }
 module.exports = new ArticleService();

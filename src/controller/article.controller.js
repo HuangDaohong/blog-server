@@ -7,6 +7,7 @@ const {
   getAllArticleByCategor,
   getAllArticleByPage,
   getAllArticleByPage2,
+  getAllArticleByPageRecommend,
   getArticleByID,
   getAllArticleByTag,
   getAllArticleByKeyword,
@@ -120,14 +121,23 @@ class ArticleController {
   }
   /**web 分页获取文章 */
   async getAllByPage2(ctx) {
-    const { pageNum = 1, pageSize = 10, weight, keyword } = ctx.request.query;
+    const { pageNum = 1, pageSize = 10, weight, keyword, orderKey } = ctx.request.query;
     try {
-      const res = await getAllArticleByPage2(pageNum, pageSize, weight, keyword);
-      ctx.body = {
-        code: 0,
-        message: '获取文章列表成功',
-        data: res,
-      };
+      if (orderKey === 'recommend') {
+        const res = await getAllArticleByPageRecommend(pageNum, pageSize);
+        ctx.body = {
+          code: 0,
+          message: '获取做多赞文章列表成功',
+          data: res,
+        };
+      } else {
+        const res = await getAllArticleByPage2(pageNum, pageSize, weight, keyword, orderKey);
+        ctx.body = {
+          code: 0,
+          message: '获取文章列表成功',
+          data: res,
+        };
+      }
     } catch (err) {
       console.log('err', err);
       return ctx.app.emit('error', articleGetError, ctx);
@@ -172,7 +182,7 @@ class ArticleController {
   /**根据article_id获取文章详情*/
   async getByArticleID(ctx) {
     const { article_id } = ctx.params;
-    console.log('######', article_id);
+    // console.log('######', article_id);
     try {
       const res = await getArticleByArticleID(article_id);
       if (!res) {

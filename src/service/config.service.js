@@ -7,20 +7,27 @@ class ConfigService {
   // 获取网站数据：文章数量、分类数量、标签数量、评论数量、友链数量
   async getConfigCountData() {
     const articleCount = await Article.count({
-      // where: {
-      //   status: 0,
-      // },
+      where: {
+        status: 0,
+      },
     });
     const categoryCount = await Category.count();
     const tagCount = await Tag.count();
     const commentCount = await Comment.count();
     const friendCount = await Friend.count();
+    // 计算所有文章的点击量
+    const articleClickCount = await Article.sum('views', {
+      where: {
+        status: 0,
+      },
+    });
     return {
       articleCount,
       categoryCount,
       tagCount,
       commentCount,
       friendCount,
+      articleClickCount,
     };
   }
 }
