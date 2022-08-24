@@ -19,7 +19,7 @@ const app = new Koa();
  */
 app.use(
   compress({
-    threshold: 1024, // 阀值，当数据超过1kb的时候，可以压缩
+    threshold: 4096, // 阀值，当数据超过4kb的时候，可以压缩
   })
 );
 

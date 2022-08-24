@@ -67,12 +67,12 @@ module.exports = {
     message: '没有token',
     data: '',
   },
-  userUpdateError:{
+  userUpdateError: {
     code: '10105',
     message: '用户更新失败',
     data: '',
   },
-  invalidOldPassword:{
+  invalidOldPassword: {
     code: '10106',
     message: '旧密码不正确',
     data: '',
@@ -263,6 +263,17 @@ module.exports = {
     code: '10904',
     message: '修改网站日志失败',
     data: '',
-  }
+  },
 
+  // 访问者
+  visitorAddError: {
+    code: '11001',
+    message: '添加访问者失败',
+    data: '',
+  },
+  visitorGetError: {
+    code: '11002',
+    message: '获取访问者失败',
+    data: '',
+  },
 };
