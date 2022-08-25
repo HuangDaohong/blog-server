@@ -373,7 +373,9 @@ class ArticleController {
         code: 0,
         message: '',
         data: {
-          Url: `http://localhost:${APP_PORT}/${filename}`,
+          // TODO
+          // Url: `http://localhost:${APP_PORT}/${filename}`,
+          Url: `http://47.100.232.11/api/${filename}`,
         },
       };
     } else {
