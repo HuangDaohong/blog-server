@@ -375,7 +375,7 @@ class ArticleController {
         data: {
           // TODO
           // Url: `http://localhost:${APP_PORT}/${filename}`,
-          Url: `http://47.100.232.11/api/${filename}`,
+          Url: `https://hdhblog.cn/api/${filename}`,
         },
       };
     } else {
