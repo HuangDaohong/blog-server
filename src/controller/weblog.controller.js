@@ -12,11 +12,11 @@ const {
 class WebLogController {
   // 插入日志
   async add(ctx) {
-    let { time, content, title } = ctx.request.body;
+    let { time, content, title, backImg } = ctx.request.body;
     // console.log('@@@@@@@@@@@@@@@@@@@@', time, content, title);
     time = moment(time).format('YYYY-MM-DD HH:mm:ss');
     try {
-      const res = await createWebLog({ time, content, title });
+      const res = await createWebLog({ time, content, title, backImg });
       ctx.body = {
         code: 0,
         message: '添加日志成功',
@@ -29,13 +29,13 @@ class WebLogController {
 
   // 修改日志
   async updateWebLog(ctx) {
-    let { time, content, title } = ctx.request.body;
+    let { time, content, title, backImg } = ctx.request.body;
     time = moment(time).format('YYYY-MM-DD HH:mm:ss');
     // console.log('@@@@@@@@@@@@@@@@@@@@', time, content, title);
 
     const { id } = ctx.params;
     try {
-      const res = await updateWebLog({ time, id, content, title });
+      const res = await updateWebLog({ time, id, content, title, backImg });
       ctx.body = {
         code: 0,
         message: '修改日志成功',

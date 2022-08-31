@@ -19,12 +19,16 @@ const WebLog = seq.define(
       type: DataTypes.STRING,
       comment: '日志标题',
     },
+    backImg: {
+      type: DataTypes.STRING(500),
+      comment: '日志背景图',
+    },
   },
   {
     freezeTableName: true,
   }
 );
-// WebLog.sync({ alter: true })
+// WebLog.sync({ alter: true });
 // WebLog.sync({ force: true })
 
 module.exports = WebLog;

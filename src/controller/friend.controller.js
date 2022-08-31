@@ -1,4 +1,10 @@
-const { createFriend, finAllFriends, removeFriend, updateFriendByID,findOneById } = require('../service/friend.service');
+const {
+  createFriend,
+  finAllFriends,
+  removeFriend,
+  updateFriendByID,
+  findOneById,
+} = require('../service/friend.service');
 const { friendAddError, friendGeterror, friendDelerror, friendUpdateError } = require('../constant/err.type');
 class FriendController {
   // 添加友链

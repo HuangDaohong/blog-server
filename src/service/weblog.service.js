@@ -16,7 +16,7 @@ class WebLogService {
   // 获取日志列表
   async finAllWebLog() {
     return await WebLog.findAndCountAll({
-      attributes: ['id', 'time', 'content', 'title'],
+      attributes: ['id', 'time', 'content', 'title', 'backImg'],
       order: [['time', 'DESC']],
     });
   }
@@ -24,7 +24,7 @@ class WebLogService {
   // 分页获取日志列表
   async finAllWebLogsByPage(pageNum, pageSize) {
     const { count, rows } = await WebLog.findAndCountAll({
-      attributes: ['id', 'time', 'content', 'title'],
+      attributes: ['id', 'time', 'content', 'title', 'backImg'],
       limit: pageSize * 1,
       offset: (pageNum - 1) * pageSize,
       order: [['time', 'DESC']],
@@ -40,7 +40,7 @@ class WebLogService {
   // 根据id获取日志
   async findOneById(id) {
     return await WebLog.findOne({
-      attributes: ['id', 'time', 'content', 'title'],
+      attributes: ['id', 'time', 'content', 'title', 'backImg'],
       where: { id },
     });
   }
