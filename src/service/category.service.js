@@ -23,6 +23,7 @@ class CategoryService {
       let articleCount = await Article.count({
         where: {
           category_id: res.rows[i].id,
+          status: 0,
         },
       });
       //  在结果中添加articleCount属性

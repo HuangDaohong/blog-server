@@ -266,30 +266,39 @@ class ArticleService {
   }
 
   // 根据分类id获取文章
-  async getAllArticleByCategor(categoryID) {
-    return await Article.findAndCountAll({
-      attributes: { exclude: ['deletedAt'] }, //不包括deletedAt字段
-      include: [
-        {
-          model: Category,
-          as: 'categoryInfo',
-          attributes: ['id', 'name', 'description'],
-        },
-        {
-          model: Tag,
-          attributes: ['id', 'name', 'color'],
-          through: { attributes: [] },
-        },
-      ],
+  async getAllArticleByCategor(categoryID, pageNum, pageSize) {
+    const { count, rows } = await Article.findAndCountAll({
+      // attributes: { exclude: ['deletedAt', 'content'] }, //不包括deletedAt字段
+      attributes: ['id', 'title', 'createdAt', 'article_id'],
+      // include: [
+      //   {
+      //     model: Category,
+      //     as: 'categoryInfo',
+      //     attributes: ['id', 'name', 'description'],
+      //   },
+      //   {
+      //     model: Tag,
+      //     attributes: ['id', 'name', 'color'],
+      //     through: { attributes: [] },
+      //   },
+      // ],
       where: {
         category_id: categoryID,
         status: {
           [Op.eq]: 0,
         },
       },
-      distinct: true,
+      // distinct: true,
       order: [['createdAt', 'DESC']],
+      limit: pageSize * 1,
+      offset: (pageNum - 1) * pageSize,
     });
+    return {
+      pageNum,
+      pageSize,
+      total: count,
+      list: rows,
+    };
   }
 
   // 根据标签id获取文章
