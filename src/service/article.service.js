@@ -143,7 +143,7 @@ class ArticleService {
         ],
       },
       distinct: true, //去重,它返回的 count 不会把你的 include 的数量算进去
-      order: [[orderKey, 'DESC']],
+      order: [[orderKey ?? 'createdAt', 'DESC']],
       limit: pageSize * 1,
       offset: (pageNum - 1) * pageSize,
     });
