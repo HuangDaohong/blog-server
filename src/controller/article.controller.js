@@ -201,7 +201,7 @@ class ArticleController {
   /**根据分类获取文章列表 */
   async getAllByCategory(ctx) {
     const { id } = ctx.params;
-    const { pageNum = 1, pageSize = 8 } = ctx.request.query;
+    const { pageNum = 1, pageSize = 7 } = ctx.request.query;
     try {
       const res = await getAllArticleByCategor(id, pageNum, pageSize);
       ctx.body = {
@@ -217,8 +217,9 @@ class ArticleController {
   /**根据标签id获取文章列表 */
   async getAllByTag(ctx) {
     const { id } = ctx.params;
+    const { pageNum = 1, pageSize = 7 } = ctx.request.query;
     try {
-      const res = await getAllArticleByTag(id);
+      const res = await getAllArticleByTag(id, pageNum, pageSize);
       ctx.body = {
         code: 0,
         message: '获取文章列表成功',

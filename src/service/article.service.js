@@ -301,23 +301,61 @@ class ArticleService {
     };
   }
 
-  // 根据标签id获取文章
-  async getAllArticleByTag(tagID) {
-    const { rows, count } = await Tag.findAndCountAll({
-      attributes: ['name'],
+  // // 根据标签id获取文章
+  // async getAllArticleByTag(tagID, pageNum, pageSize) {
+  //   const { rows, count } = await Tag.findAndCountAll({
+  //     attributes: ['id', 'name', 'color', 'background'],
+  //     include: [
+  //       {
+  //         model: Article,
+  //         where: {
+  //           status: 0,
+  //         },
+  //         through: { attributes: [] },
+  //         attributes: ['id', 'title', 'createdAt', 'article_id'],
+  //         // order: [['createdAt', 'DESC']],
+  //         // limit: pageSize * 1,
+  //         // offset: (pageNum - 1) * pageSize,
+  //       },
+  //     ],
+  //     where: {
+  //       id: tagID,
+  //     },
+  //   });
+  //   // console.log('rows:', rows);
+  //   // const articles = rows[0].tb_articles;
+  //   return { pageNum, pageSize, total: count, list: rows };
+  // }
+
+  // 根据标签id获取文章第二种方法
+  async getAllArticleByTag(tagID, pageNum, pageSize) {
+    const { count, rows } = await Article.findAndCountAll({
+      attributes: ['id', 'title', 'createdAt', 'article_id'],
       include: [
         {
-          model: Article,
+          model: Tag,
+          attributes: ['id', 'name', 'color', 'background'],
+          through: { attributes: [] },
+          where: {
+            id: tagID,
+          },
         },
       ],
       where: {
-        id: tagID,
+        status: 0,
       },
+      distinct: true,
+      order: [['createdAt', 'DESC']],
+      limit: pageSize * 1,
+      offset: (pageNum - 1) * pageSize,
     });
-    const articles = rows[0].tb_articles;
-    return { count, articles };
+    return {
+      pageNum,
+      pageSize,
+      total: count,
+      list: rows,
+    };
   }
-
   // 根据关键字获取文章列表
   async getAllArticleByKeyword(keyword, pageNum, pageSize) {
     let keywordWhere = null;
