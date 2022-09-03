@@ -197,13 +197,15 @@ class CommentService {
         id,
       },
     });
+    // TODO bug 如果文章不存在呢?
     const article = await Article.findOne({
       where: {
         id: comment.article_id,
       },
     });
-    await article.decrement('comments', { by: 1 });
-
+    if (article) {
+      await article.decrement('comments', { by: 1 });
+    }
     const res = await Comment.destroy({
       where: { id },
     });
