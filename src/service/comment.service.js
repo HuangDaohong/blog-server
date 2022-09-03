@@ -25,12 +25,69 @@ class CommentService {
 
   // 根据文章id获取所有评论
   async getAllCommentByArticleId(articleId, pageNum, pageSize) {
-    return await Comment.findAndCountAll({
-      where: { article_id: articleId },
+    // return await Comment.findAndCountAll({
+    //   where: { article_id: articleId },
+    //   offset: (pageNum - 1) * pageSize,
+    //   limit: pageSize * 1,
+    //   order: [['createdAt', 'DESC']],
+    // });
+    // console.log(pageNum, pageSize);
+    const { count, rows } = await Comment.findAndCountAll({
+      include: [
+        {
+          model: User,
+          attributes: ['id', 'name', 'avatar', 'email', 'ip', 'address', 'client'],
+        },
+      ],
+      where: { parent_comment_id: null, article_id: articleId },
+      distinct: true, //去重,它返回的 count 不会把你的 include 的数量算进去
       offset: (pageNum - 1) * pageSize,
       limit: pageSize * 1,
       order: [['createdAt', 'DESC']],
     });
+
+    // 获取子评论
+    for (let i = 0; i < rows.length; i++) {
+      const { id } = rows[i];
+      const { count: childcount, rows: childRows } = await Comment.findAndCountAll({
+        include: [
+          {
+            model: User,
+            attributes: ['id', 'name', 'avatar', 'email', 'ip', 'address', 'client'],
+          },
+        ],
+        where: { parent_comment_id: id },
+        distinct: true,
+        order: [['createdAt', 'ASC']],
+      });
+
+      if (childcount > 0) {
+        for (let j = 0; j < childRows.length; j++) {
+          if (childRows[j].reply_comment_id !== null) {
+            const replyComment = await Comment.findOne({
+              attributes: ['id', 'content'],
+              where: { id: childRows[j].reply_comment_id },
+              include: [
+                {
+                  model: User,
+                  attributes: ['name', 'avatar'],
+                },
+              ],
+            });
+            childRows[j].dataValues.replyComment = replyComment;
+          }
+        }
+
+        rows[i].dataValues.children = childRows;
+      }
+    }
+
+    return {
+      pageNum,
+      pageSize,
+      total: count,
+      list: rows,
+    };
   }
 
   // 分页获取评论列表
@@ -57,7 +114,7 @@ class CommentService {
 
   // 根据parend_comment_id字段分页获取包含children的评论列表,包含子组件评论
   async getAllCommentAndChildrenByPage(pageNum, pageSize) {
-    console.log(pageNum, pageSize);
+    // console.log(pageNum, pageSize);
     const { count, rows } = await Comment.findAndCountAll({
       include: [
         {
@@ -109,10 +166,10 @@ class CommentService {
     }
 
     return {
-      total: count,
-      list: rows,
       pageNum,
       pageSize,
+      total: count,
+      list: rows,
     };
   }
 
@@ -134,6 +191,19 @@ class CommentService {
         parent_comment_id: id,
       },
     });
+    // 文章的评论数减一
+    const comment = await Comment.findOne({
+      where: {
+        id,
+      },
+    });
+    const article = await Article.findOne({
+      where: {
+        id: comment.article_id,
+      },
+    });
+    await article.decrement('comments', { by: 1 });
+
     const res = await Comment.destroy({
       where: { id },
     });

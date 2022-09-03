@@ -64,7 +64,7 @@ module.exports = {
   },
   noToken: {
     code: '10104',
-    message: '没有token',
+    message: '你登录了吗?😅😅😅',
     data: '',
   },
   userUpdateError: {

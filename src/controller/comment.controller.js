@@ -7,7 +7,7 @@ const {
   deleteOneComment,
   updateComment,
   getAllCommentByArticleId,
-  getAllCommentAndChildrenByPage
+  getAllCommentAndChildrenByPage,
 } = require('../service/comment.service');
 
 const {
@@ -21,10 +21,17 @@ const {
 class CommentController {
   // 新增评论
   async add(ctx, next) {
-    const { article_id, content, parent_comment_id,reply_comment_id,comment_equipment } = ctx.request.body;
+    const { article_id, content, parent_comment_id, reply_comment_id, comment_equipment } = ctx.request.body;
     const user_id = ctx.state.user.id;
     try {
-      const res = await createComment({ user_id, article_id, content, parent_comment_id, reply_comment_id,comment_equipment });
+      const res = await createComment({
+        user_id,
+        article_id,
+        content,
+        parent_comment_id,
+        reply_comment_id,
+        comment_equipment,
+      });
       ctx.body = {
         code: 0,
         message: '添加评论成功',
@@ -66,9 +73,10 @@ class CommentController {
 
   // 根据文章id获取所有评论
   async getAllByArticleId(ctx) {
-    const { pageNum = 1, pageSize = 10 } = ctx.request.query;
+    const { pageNum = 1, pageSize = 6 } = ctx.request.query;
+    console.log();
     try {
-      const res = await getAllCommentAndChildrenByPage(ctx.params.id,pageNum, pageSize);
+      const res = await getAllCommentByArticleId(ctx.params.id, pageNum, pageSize);
       ctx.body = {
         code: 0,
         message: '获取评论列表成功',
