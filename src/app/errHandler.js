@@ -13,7 +13,7 @@ module.exports = (err, ctx, errDetail) => {
       status = 402;
       break;
     default:
-      status = 500;
+      status = 403;
   }
   ctx.status = status;
   ctx.body = err;
