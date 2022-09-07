@@ -1,5 +1,5 @@
-const { errLogger } = require('../app/config.log');
-const { isDev } = require('../config/config.default');
+// const { errLogger } = require('../app/config.log');
+// const { isDev } = require('../config/config.default');
 
 module.exports = (err, ctx, errDetail) => {
   let status = 500;
@@ -17,12 +17,12 @@ module.exports = (err, ctx, errDetail) => {
   }
   ctx.status = status;
   ctx.body = err;
-  if (isDev) {
-    console.log('==========START=========');
-    console.log(err); // 自定义错误信息
-    console.log(errDetail); // 错误详情信息
-    console.log('==========END===========');
-  } else {
-    errLogger(ctx, err, errDetail);
-  }
+  // if (isDev) {
+  //   console.log('==========START=========');
+  //   console.log(err); // 自定义错误信息
+  //   console.log(errDetail); // 错误详情信息
+  //   console.log('==========END===========');
+  // } else {
+  //   errLogger(ctx, err, errDetail);
+  // }
 };

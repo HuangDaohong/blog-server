@@ -7,7 +7,7 @@ const cors = require('koa2-cors');
 const Moment = require('moment');
 const compress = require('koa-compress'); // 引入gzip压缩模块
 
-const Koa_Session = require('koa-session');
+// const Koa_Session = require('koa-session');
 
 const Koa_Logger = require('koa-logger'); //只能打印一些请求的信息，并不会记录日志
 const errHandler = require('./errHandler');
@@ -66,12 +66,12 @@ app.use(KoaStatic(path.join(__dirname, '../upload/airticlecover')));
 app.use(KoaStatic(path.join(__dirname, '../upload/articleimg')));
 
 app.use(parameter(app));
-app.use(
-  Koa_Logger((str, args) => {
-    console.log(Moment().format('YYYY-MM-DD HH:mm:ss') + str);
-    // resLogger.info(str);
-  })
-);
+// app.use(
+//   Koa_Logger((str, args) => {
+//     console.log(Moment().format('YYYY-MM-DD HH:mm:ss') + str);
+//     // resLogger.info(str);
+//   })
+// );
 
 app.use(cors());
 
