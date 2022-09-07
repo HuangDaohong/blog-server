@@ -95,7 +95,7 @@ class UserController {
   }
   // 用户上传头像接口
   async uploadAvatar(ctx) {
-    const { id } = ctx.state.user;
+    // const { id } = ctx.state.user;
     const { avatar_Img } = ctx.request.files || {};
 
     const fileTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg', 'image/bmp', 'image/webp'];
@@ -112,10 +112,10 @@ class UserController {
       }
 
       // 文件名 *.jpg
-      const filename = avatar_Img.newFilename;
+      const new_avatarname = avatar_Img.newFilename;
       // 后缀 .jpg
-      const suffix = filename.substring(filename.lastIndexOf('.'));
-      const new_avatarname = ctx.state.user.name + '-avatar' + suffix;
+      // const suffix = filename.substring(filename.lastIndexOf('.'));
+      // const new_avatarname = ctx.state.user.name + '-avatar' + suffix;
       fs.rename(
         ctx.request.files.avatar_Img.filepath,
         path.join(__dirname, '../upload/' + new_avatarname),
@@ -124,7 +124,7 @@ class UserController {
         }
       );
 
-      await updateById({ id, avatar: new_avatarname });
+      // await updateById({ id, avatar: new_avatarname });
       ctx.body = {
         code: 0,
         message: '图片上传成功',

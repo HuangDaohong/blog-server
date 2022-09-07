@@ -53,7 +53,7 @@ router.put('/:id', auth, hadAdminPermission, verifyUser, updateUserInfomation);
 router.patch('/:id', auth, hadAdminPermission, verifyPass, crpytPassword, updateUserPassword);
 
 // 用户上传头像接口
-router.post('/uploadavatar', auth, hadAdminPermission, koabodysettings, uploadAvatar);
+router.post('/uploadavatar', koabodysettings, uploadAvatar);
 
 // 删除用户接口 {id}
 router.delete('/:id', auth, hadAdminPermission, deleteUser);
