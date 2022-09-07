@@ -133,9 +133,9 @@ const verifyLogin = async (ctx, next) => {
 };
 
 const verfyMailCode = async (ctx, next) => {
-  console.log(ctx.request.body);
-  console.log(ctx.session.code);
-  console.log('@@@');
+  // console.log(ctx.request.body);
+  // console.log(ctx.session.code);
+  // console.log('@@@');
 
   const { code } = ctx.request.body;
   if (code !== ctx.session.code) {

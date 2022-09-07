@@ -9,7 +9,7 @@ const {
   koabodysettings,
   verifyPass,
   verifyUserCreate,
-  // verfyMailCode,
+  verfyMailCode,
 } = require('../middleware/user.middleware');
 
 const { auth, hadAdminPermission } = require('../middleware/auth.middleware');
@@ -26,7 +26,6 @@ const {
   uploadAvatar,
   updateUserPassword,
   getEmailCode,
-  verfyMailCode,
 } = require('../controller/user.controller');
 
 const router = new Router({ prefix: '/users' });

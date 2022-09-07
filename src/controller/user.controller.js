@@ -265,18 +265,18 @@ class UserController {
     }
   }
 
-  async verfyMailCode(ctx, next) {
-    console.log(ctx.request.body);
-    console.log(ctx.session.code);
-    console.log(ctx.session);
-    console.log('@@@');
+  // async verfyMailCode(ctx, next) {
+  //   console.log(ctx.request.body);
+  //   console.log(ctx.session.code);
+  //   console.log(ctx.session);
+  //   console.log('@@@');
 
-    const { code } = ctx.request.body;
-    if (code !== ctx.session.code) {
-      return ctx.app.emit('error', invalidCode, ctx);
-    }
+  //   const { code } = ctx.request.body;
+  //   if (code !== ctx.session.code) {
+  //     return ctx.app.emit('error', invalidCode, ctx);
+  //   }
 
-    await next();
-  }
+  //   await next();
+  // }
 }
 module.exports = new UserController();
