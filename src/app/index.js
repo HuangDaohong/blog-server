@@ -76,10 +76,6 @@ app.use(
 app.use(
   cors({
     credentials: true, //允许跨域携带cookie
-    // 允许来自所有域名请求
-    origin: function (ctx) {
-      return '*';
-    },
   })
 );
 
