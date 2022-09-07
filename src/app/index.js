@@ -29,7 +29,7 @@ app.use(
   Koa_Session(
     {
       key: 'koa:sess', //cookie key (default is koa:sess)
-      maxAge: 1000 * 600 * 600, // cookie的过期时间 maxAge in ms 3分钟
+      maxAge: 1000 * 60 * 3, // cookie的过期时间 maxAge in ms 3分钟
       overwrite: true, //是否可以overwrite    (默认default true)
       httpOnly: true, //cookie是否只有服务器端可以访问 httpOnly or not (default true)
       signed: true, //签名默认true
