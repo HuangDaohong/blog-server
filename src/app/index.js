@@ -73,11 +73,7 @@ app.use(
   })
 );
 
-app.use(
-  cors({
-    credentials: true, //允许跨域携带cookie
-  })
-);
+app.use(cors());
 
 app.use(router.routes()).use(router.allowedMethods());
 
