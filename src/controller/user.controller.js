@@ -229,7 +229,7 @@ class UserController {
     const { email } = ctx.request.body;
     const code = Math.random().toString().slice(-6);
     // 在会话中添加验证码字段code
-    ctx.session.codeWord = code;
+    ctx.session.code = code;
     try {
       const res = await sendMail(
         email,
@@ -267,7 +267,7 @@ class UserController {
 
   async verfyMailCode(ctx, next) {
     console.log(ctx.request.body);
-    console.log(ctx.session.codeWord);
+    console.log(ctx.session.code);
     console.log(ctx.session);
     console.log('@@@');
 
