@@ -7,7 +7,7 @@ const cors = require('koa2-cors');
 const Moment = require('moment');
 const compress = require('koa-compress'); // 引入gzip压缩模块
 
-// const Koa_Session = require('koa-session');
+const Koa_Session = require('koa-session');
 
 const Koa_Logger = require('koa-logger'); //只能打印一些请求的信息，并不会记录日志
 const errHandler = require('./errHandler');
@@ -25,22 +25,22 @@ app.use(
 );
 
 app.keys = ['some secret hurr']; //cookie的签名
-// app.use(
-//   Koa_Session(
-//     {
-//       key: 'koa:sess', //cookie key (default is koa:sess)
-//       maxAge: 1000 * 600 * 600, // cookie的过期时间 maxAge in ms 3分钟
-//       overwrite: true, //是否可以overwrite    (默认default true)
-//       httpOnly: true, //cookie是否只有服务器端可以访问 httpOnly or not (default true)
-//       signed: true, //签名默认true
-//       rolling: false, //在每次请求时强行设置cookie，这将重置cookie过期时间（默认：false）
-//       renew: false, //(boolean) renew session when session is nearly expired,
-//       // secure: true,
-//       // SameSite: 'None',
-//     },
-//     app
-//   )
-// );
+app.use(
+  Koa_Session(
+    {
+      key: 'koa:sess', //cookie key (default is koa:sess)
+      maxAge: 1000 * 600 * 600, // cookie的过期时间 maxAge in ms 3分钟
+      overwrite: true, //是否可以overwrite    (默认default true)
+      httpOnly: true, //cookie是否只有服务器端可以访问 httpOnly or not (default true)
+      signed: true, //签名默认true
+      rolling: false, //在每次请求时强行设置cookie，这将重置cookie过期时间（默认：false）
+      renew: false, //(boolean) renew session when session is nearly expired,
+      // secure: true,
+      // SameSite: 'None',
+    },
+    app
+  )
+);
 
 // app.use(KoaBody());
 app.use(
@@ -66,12 +66,12 @@ app.use(KoaStatic(path.join(__dirname, '../upload/airticlecover')));
 app.use(KoaStatic(path.join(__dirname, '../upload/articleimg')));
 
 app.use(parameter(app));
-// app.use(
-//   Koa_Logger((str, args) => {
-//     console.log(Moment().format('YYYY-MM-DD HH:mm:ss') + str);
-//     // resLogger.info(str);
-//   })
-// );
+app.use(
+  Koa_Logger((str, args) => {
+    console.log(Moment().format('YYYY-MM-DD HH:mm:ss') + str);
+    // resLogger.info(str);
+  })
+);
 
 app.use(cors());
 
