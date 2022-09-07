@@ -16,12 +16,15 @@ const {
   fileUploadError,
   getUserInfoError,
   userLoginError,
+  sendCodeError,
+  invalidCode,
 } = require('../constant/err.type');
 
+const { sendMail } = require('../config/sendEmail');
 const { JWT_SECRET } = require('../config/config.default');
 
 class UserController {
-  async register(ctx, next) {
+  async register(ctx) {
     try {
       const res = await createUser(ctx.request.body);
       ctx.body = {
@@ -31,11 +34,11 @@ class UserController {
       };
     } catch (err) {
       console.log('注册失败');
-      return ctx.app.emit('error', userRegisterError, ctx);
+      return ctx.app.emit('error', userRegisterError, ctx, err);
     }
   }
 
-  async login(ctx, next) {
+  async login(ctx) {
     const { name, email } = ctx.request.body;
 
     try {
@@ -47,7 +50,7 @@ class UserController {
         data: res,
       };
     } catch (err) {
-      return ctx.app.emit('error', userLoginError, ctx);
+      return ctx.app.emit('error', userLoginError, ctx, err);
     }
   }
 
@@ -87,7 +90,7 @@ class UserController {
         };
       }
     } catch (err) {
-      return ctx.app.emit('error', userUpdateError, ctx);
+      return ctx.app.emit('error', userUpdateError, ctx, err);
     }
   }
   // 用户上传头像接口
@@ -95,7 +98,7 @@ class UserController {
     const { id } = ctx.state.user;
     const { avatar_Img } = ctx.request.files || {};
 
-    const fileTypes = ['image/jpeg', 'image/png'];
+    const fileTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg', 'image/bmp', 'image/webp'];
     if (avatar_Img) {
       if (!fileTypes.includes(avatar_Img.mimetype)) {
         // 删除上传的非图文件
@@ -181,7 +184,7 @@ class UserController {
         data: res,
       };
     } catch (err) {
-      return ctx.app.emit('error', getUserInfoError, ctx);
+      return ctx.app.emit('error', getUserInfoError, ctx, err);
     }
   }
 
@@ -205,7 +208,7 @@ class UserController {
 
   // 获取用户列表 分页
   async getUserListByPage(ctx) {
-    let { pageNum = 1, pageSize = 5 } = ctx.request.query;
+    let { pageNum = 1, pageSize = 10 } = ctx.request.query;
     let res = await getUserListPage({ pageNum, pageSize });
     if (res) {
       ctx.body = {
@@ -221,6 +224,59 @@ class UserController {
       };
     }
   }
-}
 
+  async getEmailCode(ctx) {
+    const { email } = ctx.request.body;
+    const code = Math.random().toString().slice(-6);
+    // 在会话中添加验证码字段code
+    ctx.session.codeWord = code;
+    try {
+      const res = await sendMail(
+        email,
+        '验证码',
+        '验证码',
+        `<div >
+        <p>您好,您正在注册Huang Blog博客帐号,
+        验证邮箱为<b>${email}</b>
+        </p>
+        您的验证码为：
+        <p style="color: green;font-weight: 600;margin: 0 6px;text-align: center; font-size: 20px">
+          ${code}
+        </p>
+        <p>请在三分钟内在注册页面填写。</p>
+        <p>本邮件为自动发送，无须回复。</p>
+       </div>`
+      );
+      if (res) {
+        ctx.body = {
+          code: 0,
+          message: '发送验证码成功',
+          data: '',
+        };
+      } else {
+        ctx.body = {
+          code: '1',
+          message: '发送验证码失败',
+          data: '',
+        };
+      }
+    } catch (err) {
+      return ctx.app.emit('error', sendCodeError, ctx, err);
+    }
+  }
+
+  async verfyMailCode(ctx, next) {
+    console.log(ctx.request.body);
+    console.log(ctx.session.codeWord);
+    console.log(ctx.session);
+    console.log('@@@');
+
+    const { code } = ctx.request.body;
+    if (code !== ctx.session.code) {
+      return ctx.app.emit('error', invalidCode, ctx);
+    }
+
+    await next();
+  }
+}
 module.exports = new UserController();

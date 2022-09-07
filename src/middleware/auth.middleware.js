@@ -19,7 +19,6 @@ const auth = async (ctx, next) => {
     // 鉴权
     const user = jwt.verify(token, JWT_SECRET);
     ctx.state.user = user;
-    // console.log(ctx.state.user);
   } catch (err) {
     switch (err.name) {
       case 'TokenExpiredError':
@@ -38,11 +37,11 @@ const auth = async (ctx, next) => {
 };
 
 const hadAdminPermission = async (ctx, next) => {
-  // console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', ctx.state.user);
   const { role } = ctx.state.user;
   if (role !== 1) {
     return ctx.app.emit('error', hasNotAdminPermission, ctx);
   }
+
   await next();
 };
 
@@ -54,6 +53,7 @@ const validator = (rules) => {
       console.error(err);
       return ctx.app.emit('error', PARAM_ERROR, ctx);
     }
+
     await next();
   };
 };

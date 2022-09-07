@@ -29,7 +29,6 @@ class FriendService {
 
   // 修改数据
   async updateFriendByID(id, friend) {
-    console.log('===========', id, friend);
     const res = await Friend.update(friend, {
       where: { id: id },
     });

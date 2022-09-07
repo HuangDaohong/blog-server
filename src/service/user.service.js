@@ -31,7 +31,20 @@ class UserService {
     return res;
   }
 
-  async getLoginUserInfo({ name, email }) {
+  // username或者email查询用户
+  async getLoginUserInfo({ name }) {
+    const res = await User.findOne({
+      where: {
+        [Op.or]: [{ name }, { email: name }],
+        disabledDiscuss: {
+          [Op.eq]: 0,
+        },
+      },
+    });
+    return res ? res.dataValues : null;
+  }
+
+  async getLoginUserInfo2({ name, email }) {
     const whereOpt = [];
     name && whereOpt.push({ name });
     email && whereOpt.push({ email });

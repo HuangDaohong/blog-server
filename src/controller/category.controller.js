@@ -26,7 +26,7 @@ class CategoryController {
         data: res,
       };
     } catch (err) {
-      return ctx.app.emit('error', categoryAddError, ctx);
+      return ctx.app.emit('error', categoryAddError, ctx, err);
     }
   }
 
@@ -36,7 +36,7 @@ class CategoryController {
     try {
       const res = await findOneById(id);
       if (!res) {
-        return ctx.app.emit('error', invalidCategoryID, ctx);
+        return ctx.app.emit('error', invalidCategoryID, ctx, err);
       }
       ctx.body = {
         code: 0,
@@ -44,7 +44,7 @@ class CategoryController {
         data: res,
       };
     } catch (err) {
-      return ctx.app.emit('error', categoryGeterror, ctx);
+      return ctx.app.emit('error', categoryGeterror, ctx, err);
     }
   }
 
@@ -58,7 +58,7 @@ class CategoryController {
         data: res,
       };
     } catch (err) {
-      return ctx.app.emit('error', categoryGeterror, ctx);
+      return ctx.app.emit('error', categoryGeterror, ctx, err);
     }
   }
 
@@ -73,7 +73,7 @@ class CategoryController {
         data: res,
       };
     } catch (err) {
-      return ctx.app.emit('error', categoryGeterror, ctx);
+      return ctx.app.emit('error', categoryGeterror, ctx, err);
     }
   }
 
@@ -92,7 +92,7 @@ class CategoryController {
         return ctx.app.emit('error', categoryDelerror, ctx);
       }
     } catch (err) {
-      return ctx.app.emit('error', categoryDelerror, ctx);
+      return ctx.app.emit('error', categoryDelerror, ctx, err);
     }
   }
 
@@ -110,7 +110,7 @@ class CategoryController {
         return ctx.app.emit('error', invalidCategoryID, ctx);
       }
     } catch (err) {
-      return ctx.app.emit('error', categoryUpdateError, ctx);
+      return ctx.app.emit('error', categoryUpdateError, ctx, err);
     }
   }
 }

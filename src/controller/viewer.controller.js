@@ -10,7 +10,7 @@ class ViewerController {
         data: res,
       };
     } catch (err) {
-      return ctx.app.emit('error', visitorAddError, ctx);
+      return ctx.app.emit('error', visitorAddError, ctx, err);
     }
   }
 
@@ -25,7 +25,7 @@ class ViewerController {
         data: res,
       };
     } catch (err) {
-      return ctx.app.emit('error', visitorGetError, ctx);
+      return ctx.app.emit('error', visitorGetError, ctx, err);
     }
   }
 }

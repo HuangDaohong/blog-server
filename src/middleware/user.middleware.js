@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs'); //加密，比md5高级
 const KoaBody = require('koa-body');
 const path = require('path');
-const { getUserInfo, getLoginUserInfo, getUserInfoByID } = require('../service/user.service');
+const { getUserInfo, getLoginUserInfo, getLoginUserInfo2, getUserInfoByID } = require('../service/user.service');
 const {
   userFormateError,
   userAlreadyExited,
@@ -13,6 +13,7 @@ const {
   invalidOldPassword,
   UNKNOWN_ERROR,
   hasNotAdminPermission,
+  invalidCode,
 } = require('../constant/err.type');
 
 const userValidator = async (ctx, next) => {
@@ -32,21 +33,18 @@ const verifyUser = async (ctx, next) => {
   const { name, email } = ctx.request.body;
   const { id } = ctx.params;
   try {
-    // 1、判断修改的用户
+    // 判断修改的用户
     if (Number(id) !== ctx.state.user.id) {
       if (ctx.state.user.role !== 1) return ctx.app.emit('error', hasNotAdminPermission, ctx);
     }
-    // 3、校验数据
+    // 校验数据
     const res = await getUserInfo({ name, email, id });
     if (res) {
-      console.error('用户名或邮箱已经存在', { name });
       ctx.app.emit('error', userAlreadyExited, ctx);
       return;
     }
   } catch (err) {
-    console.log('获取用户信息错误', err);
-    ctx.app.emit('error', userUpdateError, ctx);
-    return;
+    return ctx.app.emit('error', userUpdateError, ctx, err);
   }
 
   await next();
@@ -55,7 +53,7 @@ const verifyUser = async (ctx, next) => {
 const verifyUserCreate = async (ctx, next) => {
   const { name, email } = ctx.request.body;
   try {
-    const res = await getLoginUserInfo({ name, email });
+    const res = await getLoginUserInfo2({ name, email });
     if (res) {
       ctx.app.emit('error', userAlreadyExited, ctx);
       return;
@@ -115,24 +113,33 @@ const verifyPass = async (ctx, next) => {
 };
 
 const verifyLogin = async (ctx, next) => {
-  // 1. 判断用户或邮箱是否存在(不存在:报错)
-  const { name, email, password } = ctx.request.body;
+  // 判断用户或邮箱是否存在(不存在:报错)
+  const { name, password } = ctx.request.body;
 
   try {
-    const res = await getLoginUserInfo({ name, email });
+    const res = await getLoginUserInfo({ name });
     if (!res) {
-      console.error('用户名不存在', { name });
-      ctx.app.emit('error', userDoesNotExist, ctx);
-      return;
+      return ctx.app.emit('error', userDoesNotExist, ctx);
     }
-    // 2. 密码是否匹配(不匹配: 报错)
+    // 密码是否匹配(不匹配: 报错)
     if (!bcrypt.compareSync(password, res.password)) {
-      ctx.app.emit('error', invalidPassword, ctx);
-      return;
+      return ctx.app.emit('error', invalidPassword, ctx);
     }
   } catch (err) {
-    console.error(err);
     return ctx.app.emit('error', userLoginError, ctx);
+  }
+
+  await next();
+};
+
+const verfyMailCode = async (ctx, next) => {
+  console.log(ctx.request.body);
+  console.log(ctx.session.code);
+  console.log('@@@');
+
+  const { code } = ctx.request.body;
+  if (code !== ctx.session.code) {
+    return ctx.app.emit('error', invalidCode, ctx);
   }
 
   await next();
@@ -154,7 +161,9 @@ const koabodysettings = KoaBody({
     // 禁止上传非图片文件,曲线救国，把非图片文件都重新替换成 errorHandler.jpg
     // 头像上传成功 errorHandler.jpg就会消失
     onFileBegin: (name, file) => {
-      if (file.type !== 'image/jpeg' && file.type !== 'image/png') {
+      const fileTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg', 'image/bmp', 'image/webp'];
+
+      if (!fileTypes.includes(file.mimetype)) {
         file.filepath = path.join(__dirname, '../upload/' + 'errorHandler.jpg');
       }
     },
@@ -170,4 +179,5 @@ module.exports = {
   koabodysettings,
   verifyPass,
   verifyUserCreate,
+  verfyMailCode,
 };

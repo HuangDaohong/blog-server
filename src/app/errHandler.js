@@ -1,4 +1,7 @@
-module.exports = (err, ctx) => {
+const { errLogger } = require('../app/config.log');
+const { isDev } = require('../config/config.default');
+
+module.exports = (err, ctx, errDetail) => {
   let status = 500;
   switch (err.code) {
     case '10001':
@@ -10,11 +13,16 @@ module.exports = (err, ctx) => {
       status = 402;
       break;
     default:
-      status = 500;
+      status = 403;
   }
   ctx.status = status;
   ctx.body = err;
-  console.log('=============err==========Start===========');
-  console.log(err);
-  console.log('=============err===========End============');
+  if (isDev) {
+    console.log('==========START=========');
+    console.log(err); // 自定义错误信息
+    console.log(errDetail); // 错误详情信息
+    console.log('==========END===========');
+  } else {
+    errLogger(ctx, err, errDetail);
+  }
 };

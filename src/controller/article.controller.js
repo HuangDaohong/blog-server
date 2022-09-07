@@ -25,6 +25,7 @@ const {
   articleDelError,
   articleUpdateError,
   articleTitleExistedError,
+  unSupportedFileType,
 } = require('../constant/err.type');
 // const { createUUID } = require('../config/utils');
 const { APP_PORT } = require('../config/config.default');
@@ -60,7 +61,7 @@ class ArticleController {
       // 删除文章
       console.log('删除了文章');
       await delArticleByID(articleID);
-      return ctx.app.emit('error', articleAddError, ctx);
+      return ctx.app.emit('error', articleAddError, ctx, err);
     }
   }
 
@@ -74,7 +75,7 @@ class ArticleController {
         data: res,
       };
     } catch (err) {
-      return ctx.app.emit('error', articleGetError, ctx);
+      return ctx.app.emit('error', articleGetError, ctx, err);
     }
   }
 
@@ -115,8 +116,7 @@ class ArticleController {
         data: res,
       };
     } catch (err) {
-      console.log('err', err);
-      return ctx.app.emit('error', articleGetError, ctx);
+      return ctx.app.emit('error', articleGetError, ctx, err);
     }
   }
   /**web 分页获取文章 */
@@ -139,8 +139,7 @@ class ArticleController {
         };
       }
     } catch (err) {
-      console.log('err', err);
-      return ctx.app.emit('error', articleGetError, ctx);
+      return ctx.app.emit('error', articleGetError, ctx, err);
     }
   }
 
@@ -156,7 +155,7 @@ class ArticleController {
       };
     } catch (err) {
       console.log('err', err);
-      return ctx.app.emit('error', articleGetError, ctx);
+      return ctx.app.emit('error', articleGetError, ctx, err);
     }
   }
 
@@ -175,7 +174,7 @@ class ArticleController {
         data: res,
       };
     } catch (err) {
-      return ctx.app.emit('error', articleGetError, ctx);
+      return ctx.app.emit('error', articleGetError, ctx, err);
     }
   }
 
@@ -194,7 +193,7 @@ class ArticleController {
         data: res,
       };
     } catch (err) {
-      return ctx.app.emit('error', articleGetError, ctx);
+      return ctx.app.emit('error', articleGetError, ctx, err);
     }
   }
 
@@ -210,7 +209,7 @@ class ArticleController {
         data: res,
       };
     } catch (err) {
-      return ctx.app.emit('error', articleGetError, ctx);
+      return ctx.app.emit('error', articleGetError, ctx, err);
     }
   }
 
@@ -226,7 +225,7 @@ class ArticleController {
         data: res,
       };
     } catch (err) {
-      return ctx.app.emit('error', articleGetError, ctx);
+      return ctx.app.emit('error', articleGetError, ctx, err);
     }
   }
 
@@ -241,7 +240,7 @@ class ArticleController {
         data: res,
       };
     } catch (err) {
-      return ctx.app.emit('error', articleGetError, ctx);
+      return ctx.app.emit('error', articleGetError, ctx, err);
     }
   }
 
@@ -259,7 +258,7 @@ class ArticleController {
         data: res,
       };
     } catch (err) {
-      return ctx.app.emit('error', articleDelError, ctx);
+      return ctx.app.emit('error', articleDelError, ctx, err);
     }
   }
 
@@ -278,7 +277,7 @@ class ArticleController {
         data: res,
       };
     } catch (err) {
-      return ctx.app.emit('error', articleDelError, ctx);
+      return ctx.app.emit('error', articleDelError, ctx, err);
     }
   }
 
@@ -304,7 +303,7 @@ class ArticleController {
         data: res[0],
       };
     } catch (err) {
-      return ctx.app.emit('error', articleUpdateError, ctx);
+      return ctx.app.emit('error', articleUpdateError, ctx, err);
     }
   }
 
@@ -319,7 +318,7 @@ class ArticleController {
         data: '',
       };
     } catch (err) {
-      return ctx.app.emit('error', articleUpdateError, ctx);
+      return ctx.app.emit('error', articleUpdateError, ctx, err);
     }
   }
 
@@ -334,16 +333,15 @@ class ArticleController {
         data: '',
       };
     } catch (err) {
-      return ctx.app.emit('error', articleUpdateError, ctx);
+      return ctx.app.emit('error', articleUpdateError, ctx, err);
     }
   }
 
   /**上传文章背景图片 */
   async uploadCover(ctx) {
     const { avatar_Img } = ctx.request.files || {};
-
-    const fileTypes = ['image/jpeg', 'image/png'];
-    if (avatar_Img) {
+    const fileTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg', 'image/bmp', 'image/webp'];
+    if (avatar_Img.size) {
       if (!fileTypes.includes(avatar_Img.mimetype)) {
         return ctx.app.emit('error', unSupportedFileType, ctx);
       }
@@ -357,14 +355,14 @@ class ArticleController {
         },
       };
     } else {
-      return ctx.app.emit('error', fileUploadError, ctx);
+      return ctx.app.emit('error', fileUploadError, ctx, err);
     }
   }
 
   /**上传文章内容图片 */
   async uploadImgs(ctx) {
     const { uploadImg } = ctx.request.files || {};
-    const fileTypes = ['image/jpeg', 'image/png'];
+    const fileTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg', 'image/bmp', 'image/webp'];
     if (uploadImg) {
       if (!fileTypes.includes(uploadImg.mimetype)) {
         return ctx.app.emit('error', unSupportedFileType, ctx);

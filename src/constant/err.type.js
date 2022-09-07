@@ -77,6 +77,22 @@ module.exports = {
     message: '旧密码不正确',
     data: '',
   },
+  sendEmailError: {
+    code: '10107',
+    message: '发送邮件失败',
+    data: '',
+  },
+  sendCodeError: {
+    code: '10108',
+    message: '发送验证码失败',
+    data: '',
+  },
+  invalidCode: {
+    code: '10109',
+    message: '验证码不正确或已过期',
+    data: '',
+  },
+
   fileUploadError: {
     code: '10201',
     message: '头像图片上传失败',

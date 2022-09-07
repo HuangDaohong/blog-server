@@ -17,7 +17,7 @@ class FriendController {
         data: res,
       };
     } catch (err) {
-      return ctx.app.emit('error', friendAddError, ctx);
+      return ctx.app.emit('error', friendAddError, ctx, err);
     }
   }
 
@@ -31,7 +31,7 @@ class FriendController {
         data: res,
       };
     } catch (err) {
-      return ctx.app.emit('error', friendGeterror, ctx);
+      return ctx.app.emit('error', friendGeterror, ctx, err);
     }
   }
 
@@ -45,21 +45,25 @@ class FriendController {
         data: res,
       };
     } catch (err) {
-      return ctx.app.emit('error', friendGeterror, ctx);
+      return ctx.app.emit('error', friendGeterror, ctx, err);
     }
   }
 
   // 删除友链
   async deleteFriend(ctx) {
-    const res = await removeFriend(ctx.params.id);
-    if (res) {
-      ctx.body = {
-        code: 0,
-        message: '删除友链成功',
-        data: '',
-      };
-    } else {
-      return ctx.app.emit('error', friendDelerror, ctx);
+    try {
+      const res = await removeFriend(ctx.params.id);
+      if (res) {
+        ctx.body = {
+          code: 0,
+          message: '删除友链成功',
+          data: '',
+        };
+      } else {
+        return ctx.app.emit('error', friendDelerror, ctx);
+      }
+    } catch (err) {
+      return ctx.app.emit('error', friendDelerror, ctx, err);
     }
   }
 
@@ -78,7 +82,7 @@ class FriendController {
         return ctx.app.emit('error', friendUpdateError, ctx);
       }
     } catch (err) {
-      return ctx.app.emit('error', friendUpdateError, ctx);
+      return ctx.app.emit('error', friendUpdateError, ctx, err);
     }
   }
 }

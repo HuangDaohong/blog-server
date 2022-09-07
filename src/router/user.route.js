@@ -9,6 +9,7 @@ const {
   koabodysettings,
   verifyPass,
   verifyUserCreate,
+  // verfyMailCode,
 } = require('../middleware/user.middleware');
 
 const { auth, hadAdminPermission } = require('../middleware/auth.middleware');
@@ -24,6 +25,8 @@ const {
   getUserListByPage,
   uploadAvatar,
   updateUserPassword,
+  getEmailCode,
+  verfyMailCode,
 } = require('../controller/user.controller');
 
 const router = new Router({ prefix: '/users' });
@@ -35,6 +38,11 @@ const router = new Router({ prefix: '/users' });
 
 // 管理员端——注册接口  {name,email,password}
 router.post('/', auth, userValidator, hadAdminPermission, verifyUserCreate, crpytPassword, register);
+
+// web端——获取邮箱，并发送验证码
+router.post('/emailcode', getEmailCode);
+// Web端——注册接口  {name,email,password,code}
+router.post('/register', userValidator, verfyMailCode, verifyUserCreate, crpytPassword, register);
 
 // 登录接口 {name/email,password}
 router.post('/login', verifyLogin, login);

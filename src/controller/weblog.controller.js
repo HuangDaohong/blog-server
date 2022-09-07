@@ -23,7 +23,7 @@ class WebLogController {
         data: res,
       };
     } catch (err) {
-      return ctx.app.emit('error', weblogAddError, ctx);
+      return ctx.app.emit('error', weblogAddError, ctx, err);
     }
   }
 
@@ -42,7 +42,7 @@ class WebLogController {
         data: res,
       };
     } catch (err) {
-      return ctx.app.emit('error', weblogUpdateError, ctx);
+      return ctx.app.emit('error', weblogUpdateError, ctx, err);
     }
   }
 
@@ -56,7 +56,7 @@ class WebLogController {
         data: res,
       };
     } catch (err) {
-      return ctx.app.emit('error', weblogGetError, ctx);
+      return ctx.app.emit('error', weblogGetError, ctx, err);
     }
   }
 
@@ -75,7 +75,7 @@ class WebLogController {
         return ctx.app.emit('error', weblogGetError, ctx);
       }
     } catch (err) {
-      return ctx.app.emit('error', weblogGetError, ctx);
+      return ctx.app.emit('error', weblogGetError, ctx, err);
     }
   }
 
@@ -90,7 +90,7 @@ class WebLogController {
         data: res,
       };
     } catch (err) {
-      return ctx.app.emit('error', weblogGetError, ctx);
+      return ctx.app.emit('error', weblogGetError, ctx, err);
     }
   }
 
@@ -105,7 +105,7 @@ class WebLogController {
         data: '',
       };
     } catch (err) {
-      return ctx.app.emit('error', weblogDelError, ctx);
+      return ctx.app.emit('error', weblogDelError, ctx, err);
     }
   }
 }

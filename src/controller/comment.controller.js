@@ -38,7 +38,7 @@ class CommentController {
         data: res,
       };
     } catch (err) {
-      return ctx.app.emit('error', commentAddError, ctx);
+      return ctx.app.emit('error', commentAddError, ctx, err);
     }
   }
 
@@ -53,7 +53,7 @@ class CommentController {
         data: res,
       };
     } catch (err) {
-      return ctx.app.emit('error', commentGetError, ctx);
+      return ctx.app.emit('error', commentGetError, ctx, err);
     }
   }
 
@@ -67,7 +67,7 @@ class CommentController {
         data: res,
       };
     } catch (err) {
-      return ctx.app.emit('error', commentGetError, ctx);
+      return ctx.app.emit('error', commentGetError, ctx, err);
     }
   }
 
@@ -83,7 +83,7 @@ class CommentController {
         data: res,
       };
     } catch {
-      return ctx.app.emit('error', commentGetError, ctx);
+      return ctx.app.emit('error', commentGetError, ctx, err);
     }
   }
 
@@ -98,7 +98,7 @@ class CommentController {
         data: res,
       };
     } catch (err) {
-      return ctx.app.emit('error', commentGetError, ctx);
+      return ctx.app.emit('error', commentGetError, ctx, err);
     }
   }
 
@@ -113,7 +113,7 @@ class CommentController {
         data: res,
       };
     } catch (err) {
-      return ctx.app.emit('error', commentGetError, ctx);
+      return ctx.app.emit('error', commentGetError, ctx, err);
     }
   }
 
@@ -129,7 +129,7 @@ class CommentController {
         data: res,
       };
     } catch (err) {
-      return ctx.app.emit('error', commentDelError, ctx);
+      return ctx.app.emit('error', commentDelError, ctx, err);
     }
   }
 
@@ -148,7 +148,7 @@ class CommentController {
         return ctx.app.emit('error', invalidCommentID, ctx);
       }
     } catch (err) {
-      return ctx.app.emit('error', commentDelError, ctx);
+      return ctx.app.emit('error', commentDelError, ctx, err);
     }
   }
 
@@ -166,7 +166,7 @@ class CommentController {
         return ctx.app.emit('error', invalidCommentID, ctx);
       }
     } catch (err) {
-      return ctx.app.emit('error', commentUpdateError, ctx);
+      return ctx.app.emit('error', commentUpdateError, ctx, err);
     }
   }
 }

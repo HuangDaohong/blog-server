@@ -21,17 +21,17 @@ class TagController {
   async finAll(ctx, next) {
     try {
       const res = await finAllTags();
-      res?.rows.forEach(item => {
+      res?.rows.forEach((item) => {
         // 增加文章数目属性
         item.dataValues.articleCount = item.dataValues.tb_articles.length;
-      } );
+      });
       ctx.body = {
         code: 0,
         message: '获取标签列表成功',
         data: res,
       };
     } catch (err) {
-      return ctx.app.emit('error', tagGeterror, ctx);
+      return ctx.app.emit('error', tagGeterror, ctx, err);
     }
   }
 
@@ -51,9 +51,9 @@ class TagController {
 
   // 修改标签
   async updateTag(ctx, next) {
-    const {id}=ctx.request.params
+    const { id } = ctx.request.params;
     try {
-      const res = await updateTag(id,ctx.request.body);
+      const res = await updateTag(id, ctx.request.body);
       if (res) {
         ctx.body = {
           code: 0,
@@ -64,7 +64,7 @@ class TagController {
         return ctx.app.emit('error', invalidTagID, ctx);
       }
     } catch (err) {
-      return ctx.app.emit('error', tagUpdateError, ctx);
+      return ctx.app.emit('error', tagUpdateError, ctx, err);
     }
   }
 }

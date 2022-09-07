@@ -11,7 +11,7 @@ class ConfigController {
         data: res,
       };
     } catch (err) {
-      return ctx.app.emit('error', configDataGetError, ctx);
+      return ctx.app.emit('error', configDataGetError, ctx, err);
     }
   }
 }
