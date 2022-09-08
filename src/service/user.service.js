@@ -20,8 +20,8 @@ class UserService {
     });
     return res;
   }
-
-  async getUserInfoByName(name) {
+  y;
+  async getUserInfoByName({ name }) {
     const res = await User.findOne({
       where: {
         name,
