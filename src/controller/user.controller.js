@@ -9,6 +9,7 @@ const {
   getUserList,
   getUserListPage,
   getLoginUserInfo,
+  getUserInfoByName,
 } = require('../service/user.service');
 const {
   userRegisterError,
@@ -310,7 +311,7 @@ class UserController {
       console.log('封装的obj', obj);
 
       // 判断是否存在
-      item = await getUserInfo({ name: obj.name });
+      item = await getUserInfoByName({ name: obj.name });
       console.log('item', item);
       if (item) {
         // 存在

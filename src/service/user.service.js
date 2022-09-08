@@ -20,6 +20,14 @@ class UserService {
     });
     return res;
   }
+  async getUserInfoByName({ name }) {
+    const res = await User.findOne({
+      where: {
+        name,
+      },
+    });
+    return res;
+  }
 
   // 通过id查询数据
   async getUserInfoByID({ id }) {
