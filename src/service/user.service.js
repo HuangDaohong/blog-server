@@ -23,7 +23,7 @@ class UserService {
   async getUserInfoByName({ name }) {
     const res = await User.findOne({
       where: {
-        name,
+        id: name,
       },
     });
     return res ? res.dataValues : null;

@@ -334,8 +334,8 @@ class UserController {
         //   message: '登录成功',
         //   data: res2,
         // };
-        console.log('res.name是:', res2.name);
-        ctx.redirect(`https://hdhblog.cn/about?qqname=${res2?.name}`);
+        console.log('res.id:', res2.id);
+        ctx.redirect(`https://hdhblog.cn/about?qqname=${res2?.id}`);
       } else {
         let { password, ...res1 } = await createUser(obj);
         /** 从这里到封装 都是改变我获取的用户信息存储到数据库里面，根据数据库的存储，创建新用户，如果有
