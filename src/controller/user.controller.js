@@ -189,10 +189,10 @@ class UserController {
     }
   }
 
-  async getUserInfoByName(ctx) {
-    const { name } = ctx.request.query;
+  async getUserInfoByID(ctx) {
+    const { id } = ctx.request.query;
     try {
-      const { password, ...res } = await getUserInfoByID({ id: name });
+      const { password, ...res } = await getUserInfoByID({ id });
       ctx.body = {
         code: 0,
         message: '获取用户详细信息成功',
@@ -327,35 +327,17 @@ class UserController {
       const res2 = await getUserInfoByName({ name: obj.name });
       console.log('存在res2:', res2);
       if (res2) {
-        // 存在
         // res2.token = jwt.sign(res2, JWT_SECRET, { expiresIn: '7d' });
-        let qqtoken = jwt.sign(res2.dataValues, JWT_SECRET, { expiresIn: '7d' });
-
-        // ctx.body = {
-        //   code: 0,
-        //   message: '登录成功',
-        //   data: res2,
-        // };
+        const qqtoken = jwt.sign(res2.dataValues, JWT_SECRET, { expiresIn: '7d' });
         console.log('res.id:', res2.id);
         ctx.redirect(`https://hdhblog.cn/home?token=${qqtoken}&qqname=${res2?.id}`);
       } else {
         let { password, ...res1 } = await createUser(obj);
-        /** 从这里到封装 都是改变我获取的用户信息存储到数据库里面，根据数据库的存储，创建新用户，如果有
-         * 用户我就查询并获取用户的id 然后返回给前端 用户的 id
-         */
         console.log('createUser_item:', res1);
         console.log('dataValues内容:', res1.dataValues);
         // 生成token
         const qqtoken = jwt.sign(res1.dataValues, JWT_SECRET, { expiresIn: '7d' });
-        ctx.redirect(`https://hdhblog.cn/about?token=${qqtoken}&qqname=${res1?.id}`);
-        // ctx.body = {
-        //   code: 0,
-        //   message: '登录成功',
-        //   data: {
-        //     ...res,
-        //     token,
-        //   },
-        // };
+        ctx.redirect(`https://hdhblog.cn/about?token=${qqtoken}&qqid=${res1?.id}`);
       }
     }
   }
