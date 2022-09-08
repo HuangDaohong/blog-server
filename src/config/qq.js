@@ -1,4 +1,4 @@
-const { axios } = require('axios');
+import axios from 'axios';
 async function QQgetAccessToken(code) {
   let result;
   let appId = '101972085';
