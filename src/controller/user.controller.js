@@ -320,6 +320,7 @@ class UserController {
         res2.token = jwt.sign(res2, JWT_SECRET, { expiresIn: '7d' });
 
         ctx.state.qqname = res2.name;
+
         await next();
 
         // ctx.render('login', {
