@@ -37,7 +37,7 @@ class UserService {
         id,
       },
     });
-    return res;
+    return res ? res.dataValues : null;
   }
 
   // username或者email查询用户
