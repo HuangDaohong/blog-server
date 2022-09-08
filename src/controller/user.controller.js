@@ -329,6 +329,7 @@ class UserController {
       if (res2) {
         // 存在
         // res2.token = jwt.sign(res2, JWT_SECRET, { expiresIn: '7d' });
+        let qqtoken = jwt.sign(res2, JWT_SECRET, { expiresIn: '7d' });
 
         // ctx.body = {
         //   code: 0,
@@ -336,7 +337,7 @@ class UserController {
         //   data: res2,
         // };
         console.log('res.id:', res2.id);
-        ctx.redirect(`https://hdhblog.cn/about?qqname=${res2?.id}`);
+        ctx.redirect(`https://hdhblog.cn/about?qqname=${res2?.id}&token=${qqtoken}`);
       } else {
         let { password, ...res1 } = await createUser(obj);
         /** 从这里到封装 都是改变我获取的用户信息存储到数据库里面，根据数据库的存储，创建新用户，如果有
