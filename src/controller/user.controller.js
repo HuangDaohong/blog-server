@@ -328,7 +328,7 @@ class UserController {
       console.log('存在res2:', res2);
       if (res2) {
         // 存在
-        res2.token = jwt.sign(res2, JWT_SECRET, { expiresIn: '7d' });
+        // res2.token = jwt.sign(res2, JWT_SECRET, { expiresIn: '7d' });
 
         // ctx.body = {
         //   code: 0,
