@@ -27,6 +27,7 @@ const {
   updateUserPassword,
   getEmailCode,
   qqlogin,
+  getUserInfoByName,
 } = require('../controller/user.controller');
 
 const router = new Router({ prefix: '/users' });
@@ -74,4 +75,6 @@ router.get('/getuserlist', auth, hadAdminPermission, getUserList);
 // 分页获取用户列表接口
 router.get('/', auth, getUserListByPage);
 
+// 根据name查询用户
+router.get('/getuserbyname', getUserInfoByName);
 module.exports = router;

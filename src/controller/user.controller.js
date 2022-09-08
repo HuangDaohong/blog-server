@@ -41,7 +41,6 @@ class UserController {
 
   async login(ctx) {
     const { name, email } = ctx.request.body;
-
     try {
       const { password, ...res } = await getLoginUserInfo({ name, email });
       res.token = jwt.sign(res, JWT_SECRET, { expiresIn: '7d' });
@@ -189,6 +188,20 @@ class UserController {
     }
   }
 
+  async getUserInfoByName(ctx) {
+    const { name } = ctx.request.query;
+    try {
+      const { password, ...res } = await getUserInfoByName({ name });
+      ctx.body = {
+        code: 0,
+        message: '获取用户详细信息成功',
+        data: res,
+      };
+    } catch (err) {
+      return ctx.app.emit('error', getUserInfoError, ctx, err);
+    }
+  }
+
   // 获取用户列表
   async getUserList(ctx) {
     let res = await getUserList();
@@ -321,7 +334,7 @@ class UserController {
         //   message: '登录成功',
         //   data: res2,
         // };
-        ctx.redirect(`https://hdhblog.cn/home`);
+        ctx.redirect(`https://hdhblog.cn/home?$qqname=${res2.name}`);
       } else {
         let { password, ...res1 } = await createUser(obj);
         /** 从这里到封装 都是改变我获取的用户信息存储到数据库里面，根据数据库的存储，创建新用户，如果有
