@@ -10,6 +10,7 @@ const {
   getUserListPage,
   getLoginUserInfo,
   getUserInfoByName,
+  getUserInfoByID,
 } = require('../service/user.service');
 const {
   userRegisterError,
@@ -191,7 +192,7 @@ class UserController {
   async getUserInfoByName(ctx) {
     const { name } = ctx.request.query;
     try {
-      const { password, ...res } = await getUserInfoByName({ name });
+      const { password, ...res } = await getUserInfoByID({ id: name });
       ctx.body = {
         code: 0,
         message: '获取用户详细信息成功',
