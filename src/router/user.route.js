@@ -26,6 +26,7 @@ const {
   uploadAvatar,
   updateUserPassword,
   getEmailCode,
+  qqlogin,
 } = require('../controller/user.controller');
 
 const router = new Router({ prefix: '/users' });
@@ -45,6 +46,9 @@ router.post('/register', userValidator, verfyMailCode, verifyUserCreate, crpytPa
 
 // 登录接口 {name/email,password}
 router.post('/login', verifyLogin, login);
+
+// QQ登录
+router.post('/qqlogin', qqlogin);
 
 // 修改用户信息接口{name/email/password/avatar..}
 router.put('/:id', auth, hadAdminPermission, verifyUser, updateUserInfomation);

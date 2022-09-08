@@ -22,7 +22,7 @@ const {
 
 const { sendMail } = require('../config/sendEmail');
 const { JWT_SECRET } = require('../config/config.default');
-
+const { QQgetAccessToken, getOpenId, QQgetUserInfo } = require('../config/qq');
 class UserController {
   async register(ctx) {
     try {
@@ -278,5 +278,84 @@ class UserController {
 
   //   await next();
   // }
+
+  // QQ登录
+  async qqlogin(ctx) {
+    const { code } = ctx.request.query;
+    console.log('code', code); // 打印查看是否获取到
+    let userinfo;
+    let openid;
+    let item;
+    if (code) {
+      let token = await QQgetAccessToken(code); // 获取token 函数 返回 token 并存储
+      console.log('返回的token', token);
+      openid = await getOpenId(token); // 获取 Openid 函数 返回 Openid 并存储
+      console.log('返回的openid', openid);
+      if (openid && token) {
+        userinfo = await QQgetUserInfo(token, openid); // 如果都获取到了，获取用户信息
+        console.log('返回的结果', userinfo);
+      }
+    }
+    // 封装：
+    if (userinfo) {
+      let obj = {
+        name: userinfo.nickname,
+        // openid: openid,
+        // gender: userinfo.gender === '男' ? 1 : 2,
+        // province: userinfo.province,
+        address: userinfo.city,
+        // year: userinfo.year,
+        avatar: userinfo.figureurl_qq_2 ? userinfo.figureurl_qq_2 : userinfo.figureurl_qq_1,
+      };
+      console.log('封装的obj', obj);
+
+      // 判断是否存在
+      item = await getUserInfo({ name: obj.name });
+      console.log('item', item);
+      if (item) {
+        // 存在
+        const token = jwt.sign({
+          item,
+          JWT_SECRET,
+          expiresIn: '7d',
+        });
+
+        ctx.body = {
+          code: 0,
+          message: '登录成功',
+          data: {
+            token,
+            item,
+          },
+        };
+      }
+
+      item = await createUser(obj);
+      /** 从这里到封装 都是改变我获取的用户信息存储到数据库里面，根据数据库的存储，创建新用户，如果有
+       * 用户我就查询并获取用户的id 然后返回给前端 用户的 id
+       */
+      console.log('item', item);
+      // 生成token
+      const token = jwt.sign({
+        item,
+        JWT_SECRET,
+        expiresIn: '7d',
+      });
+      ctx.body = {
+        code: 0,
+        message: '登录成功',
+        data: {
+          token,
+          item,
+        },
+      };
+    } else {
+      ctx.body = {
+        code: '1',
+        message: '登录失败',
+        data: '',
+      };
+    }
+  }
 }
 module.exports = new UserController();
