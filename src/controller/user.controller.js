@@ -286,7 +286,6 @@ class UserController {
     console.log('code', code); // 打印查看是否获取到
     let userinfo;
     let openid;
-    let item;
     if (code) {
       let token = await QQgetAccessToken(code); // 获取token 函数 返回 token 并存储
       console.log('返回的token', token);
@@ -312,10 +311,10 @@ class UserController {
 
       // 判断是否存在
       item = await getUserInfoByName({ name: obj.name });
-      console.log('item', item);
+      console.log('存在item:', item);
       if (item) {
         // 存在
-        const token = jwt.sign({
+        const restoken = jwt.sign({
           item,
           JWT_SECRET,
           expiresIn: '7d',
@@ -325,19 +324,19 @@ class UserController {
           code: 0,
           message: '登录成功',
           data: {
-            token,
+            token: restoken,
             item,
           },
         };
       }
 
-      item = await createUser(obj);
+      const { password, ...res } = await createUser(obj);
       /** 从这里到封装 都是改变我获取的用户信息存储到数据库里面，根据数据库的存储，创建新用户，如果有
        * 用户我就查询并获取用户的id 然后返回给前端 用户的 id
        */
-      console.log('item', item);
+      console.log('createUser_item:', item);
       // 生成token
-      const token = jwt.sign({
+      res.token = jwt.sign({
         item,
         JWT_SECRET,
         expiresIn: '7d',
@@ -345,10 +344,7 @@ class UserController {
       ctx.body = {
         code: 0,
         message: '登录成功',
-        data: {
-          token,
-          item,
-        },
+        data: res,
       };
     } else {
       ctx.body = {
