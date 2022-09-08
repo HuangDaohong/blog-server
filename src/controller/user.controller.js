@@ -337,7 +337,7 @@ class UserController {
         console.log('dataValues内容:', res1.dataValues);
 
         const qqtoken = jwt.sign(res1.dataValues, JWT_SECRET, { expiresIn: '7d' });
-        ctx.redirect(`https://hdhblog.cn/about?token=${qqtoken}&qqid=${res1.dataValues.id}`);
+        ctx.redirect(`https://hdhblog.cn/home?token=${qqtoken}&qqid=${res1.dataValues.id}`);
       }
     }
   }
