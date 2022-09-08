@@ -17,7 +17,7 @@ const User = seq.define(
     },
     password: {
       type: DataTypes.STRING,
-      allowNull: false,
+      // allowNull: false,
       comment: '密码',
     },
     avatar: {
@@ -27,7 +27,7 @@ const User = seq.define(
     },
     email: {
       type: DataTypes.STRING(50),
-      allowNull: false,
+      // allowNull: false,
     },
     role: {
       type: DataTypes.TINYINT,
