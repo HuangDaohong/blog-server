@@ -321,31 +321,25 @@ class UserController {
           message: '登录成功',
           data: res2,
         };
+      } else {
+        let { password, ...res1 } = await createUser(obj);
+        /** 从这里到封装 都是改变我获取的用户信息存储到数据库里面，根据数据库的存储，创建新用户，如果有
+         * 用户我就查询并获取用户的id 然后返回给前端 用户的 id
+         */
+        console.log('createUser_item:', res1);
+        console.log('dataValues内容:', res1.dataValues);
+        let res = res1.dataValues;
+        // 生成token
+        const token = jwt.sign(res, JWT_SECRET, { expiresIn: '7d' });
+        ctx.body = {
+          code: 0,
+          message: '登录成功',
+          data: {
+            ...res,
+            token,
+          },
+        };
       }
-
-      let { password, ...res1 } = await createUser(obj);
-      /** 从这里到封装 都是改变我获取的用户信息存储到数据库里面，根据数据库的存储，创建新用户，如果有
-       * 用户我就查询并获取用户的id 然后返回给前端 用户的 id
-       */
-      console.log('createUser_item:', res1);
-      console.log('dataValues内容:', res1.dataValues);
-      let res = res1.dataValues;
-      // 生成token
-      const token = jwt.sign(res, JWT_SECRET, { expiresIn: '7d' });
-      ctx.body = {
-        code: 0,
-        message: '登录成功',
-        data: {
-          ...res,
-          token,
-        },
-      };
-    } else {
-      ctx.body = {
-        code: '1',
-        message: '登录失败',
-        data: '',
-      };
     }
   }
 }
