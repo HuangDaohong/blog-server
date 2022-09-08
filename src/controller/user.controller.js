@@ -327,11 +327,13 @@ class UserController {
         };
       }
 
-      const { password, ...res } = await createUser(obj);
+      let { password, ...res1 } = await createUser(obj);
       /** 从这里到封装 都是改变我获取的用户信息存储到数据库里面，根据数据库的存储，创建新用户，如果有
        * 用户我就查询并获取用户的id 然后返回给前端 用户的 id
        */
-      console.log('createUser_item:', res);
+      console.log('createUser_item:', res1);
+      console.log('dataValues:', res1.dataValues);
+      let res = res1.dataValues;
       // 生成token
       res.token = jwt.sign({
         res,
