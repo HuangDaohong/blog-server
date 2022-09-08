@@ -310,7 +310,7 @@ class UserController {
       console.log('封装的obj', obj);
 
       // 判断是否存在
-      item = await getUserInfoByName({ name: obj.name });
+      let item = await getUserInfoByName({ name: obj.name });
       console.log('存在item:', item);
       if (item) {
         // 存在
