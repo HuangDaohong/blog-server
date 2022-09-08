@@ -310,12 +310,12 @@ class UserController {
       console.log('封装的obj', obj);
 
       // 判断是否存在
-      let item = await getUserInfoByName({ name: obj.name });
-      console.log('存在item:', item);
-      if (item) {
+      const res2 = await getUserInfoByName({ name: obj.name });
+      console.log('存在res2:', res2);
+      if (res2) {
         // 存在
-        const restoken = jwt.sign({
-          item,
+        res2.token = jwt.sign({
+          res2,
           JWT_SECRET,
           expiresIn: '7d',
         });
@@ -323,10 +323,7 @@ class UserController {
         ctx.body = {
           code: 0,
           message: '登录成功',
-          data: {
-            token: restoken,
-            item,
-          },
+          data: res2,
         };
       }
 

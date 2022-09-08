@@ -26,7 +26,7 @@ class UserService {
         name,
       },
     });
-    return res;
+    return res ? res.dataValues : null;
   }
 
   // 通过id查询数据
