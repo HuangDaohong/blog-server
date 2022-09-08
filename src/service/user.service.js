@@ -5,7 +5,7 @@ class UserService {
   // 插入数据
   async createUser(user) {
     const res = await User.create(user);
-    return res.save();
+    return await res.save();
   }
 
   // 查询数据
