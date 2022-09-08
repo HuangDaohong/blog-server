@@ -329,7 +329,7 @@ class UserController {
       if (res2) {
         // 存在
         // res2.token = jwt.sign(res2, JWT_SECRET, { expiresIn: '7d' });
-        let qqtoken = jwt.sign(res2, JWT_SECRET, { expiresIn: '7d' });
+        let qqtoken = jwt.sign(res2.dataValues, JWT_SECRET, { expiresIn: '7d' });
 
         // ctx.body = {
         //   code: 0,
