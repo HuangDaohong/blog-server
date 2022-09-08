@@ -330,7 +330,7 @@ class UserController {
         // res2.token = jwt.sign(res2, JWT_SECRET, { expiresIn: '7d' });
         const qqtoken = jwt.sign(res2.dataValues, JWT_SECRET, { expiresIn: '7d' });
         console.log('res.id:', res2.id);
-        ctx.redirect(`https://hdhblog.cn/home?token=${qqtoken}&qqname=${res2?.id}`);
+        ctx.redirect(`https://hdhblog.cn/home?token=${qqtoken}&qqid=${res2?.id}`);
       } else {
         let { password, ...res1 } = await createUser(obj);
         console.log('createUser_item:', res1);
