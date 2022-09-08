@@ -40,10 +40,7 @@ class UserController {
   }
 
   async login(ctx) {
-    let { name, email } = ctx.request.body;
-    if (!name || !email) {
-      name = ctx.state.qqname;
-    }
+    const { name, email } = ctx.request.body;
 
     try {
       const { password, ...res } = await getLoginUserInfo({ name, email });
@@ -284,13 +281,13 @@ class UserController {
   // }
 
   // QQ登录
-  async qqlogin(ctx, next) {
+  async qqlogin(ctx) {
     const { code } = ctx.request.query;
-    console.log('code', code); // 打印查看是否获取到
+    console.log('code', code); //点击点击“登录”，网站回调域 就会收到的腾讯服务器所发起的回调。请求 ：回调地址/GET /code=F91C6110********
     let userinfo;
     let openid;
     if (code) {
-      let token = await QQgetAccessToken(code); // 获取token 函数 返回 token 并存储
+      let token = await QQgetAccessToken(code); // 获取 Access Token 函数 返回 token 并存储
       console.log('返回的token', token);
       openid = await getOpenId(token); // 获取 Openid 函数 返回 Openid 并存储
       console.log('返回的openid', openid);
@@ -319,21 +316,11 @@ class UserController {
         // 存在
         res2.token = jwt.sign(res2, JWT_SECRET, { expiresIn: '7d' });
 
-        ctx.state.qqname = res2.name;
-
-        await next();
-
-        // ctx.render('login', {
-        //   code: 0,
-        //   message: '登录成功',
-        //   data: res2,
-        // });
-
-        // ctx.body = {
-        //   code: 0,
-        //   message: '登录成功',
-        //   data: res2,
-        // };
+        ctx.body = {
+          code: 0,
+          message: '登录成功',
+          data: res2,
+        };
       } else {
         let { password, ...res1 } = await createUser(obj);
         /** 从这里到封装 都是改变我获取的用户信息存储到数据库里面，根据数据库的存储，创建新用户，如果有

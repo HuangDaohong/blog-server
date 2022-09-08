@@ -11,7 +11,7 @@ async function QQgetAccessToken(code) {
     method: 'GET',
   })
     .then((res) => {
-      console.log(res.data);
+      // console.log(res.data);
       result = res.data.access_token;
       //   res.data.access_token
     })
