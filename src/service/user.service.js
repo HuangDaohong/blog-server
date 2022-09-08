@@ -4,7 +4,8 @@ const User = require('../model/user.model');
 class UserService {
   // 插入数据
   async createUser(user) {
-    return await User.create(user);
+    const res = await User.create(user);
+    return res.save();
   }
 
   // 查询数据
