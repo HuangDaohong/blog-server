@@ -3,7 +3,7 @@ async function QQgetAccessToken(code) {
   let result;
   let appId = '101972085';
   let appKey = 'd8ded098fdeceed4bf48658f7f5e8ed2';
-  let redirectUrl = 'https://hdhblog.cn/api/users/qqlogin'; // 回调地址是一样的 我这里就是我的获取登陆接口的地址
+  let redirectUrl = 'https://hdhblog.cn/home'; // 回调地址是一样的 我这里就是我的获取登陆接口的地址
 
   // 安装了 axios 请求 接口 获取返回的token
   await axios({
