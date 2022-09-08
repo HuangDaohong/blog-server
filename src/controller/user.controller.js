@@ -192,7 +192,7 @@ class UserController {
   async getUserInfoByID(ctx) {
     const { id } = ctx.request.query;
     try {
-      const { password, ...res } = await getUserInfoByID({ id });
+      const res = await getUserInfoByID({ id });
       ctx.body = {
         code: 0,
         message: '获取用户详细信息成功',
