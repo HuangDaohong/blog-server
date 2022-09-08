@@ -337,7 +337,7 @@ class UserController {
         //   data: res2,
         // };
         console.log('res.id:', res2.id);
-        ctx.redirect(`https://hdhblog.cn/about?qqname=${res2?.id}&token=${qqtoken}`);
+        ctx.redirect(`https://hdhblog.cn/home?token=${qqtoken}&qqname=${res2?.id}`);
       } else {
         let { password, ...res1 } = await createUser(obj);
         /** 从这里到封装 都是改变我获取的用户信息存储到数据库里面，根据数据库的存储，创建新用户，如果有
@@ -345,17 +345,17 @@ class UserController {
          */
         console.log('createUser_item:', res1);
         console.log('dataValues内容:', res1.dataValues);
-        let res = res1.dataValues;
         // 生成token
-        const token = jwt.sign(res, JWT_SECRET, { expiresIn: '7d' });
-        ctx.body = {
-          code: 0,
-          message: '登录成功',
-          data: {
-            ...res,
-            token,
-          },
-        };
+        const qqtoken = jwt.sign(res1.dataValues, JWT_SECRET, { expiresIn: '7d' });
+        ctx.redirect(`https://hdhblog.cn/about?token=${qqtoken}&qqname=${res1?.id}`);
+        // ctx.body = {
+        //   code: 0,
+        //   message: '登录成功',
+        //   data: {
+        //     ...res,
+        //     token,
+        //   },
+        // };
       }
     }
   }
