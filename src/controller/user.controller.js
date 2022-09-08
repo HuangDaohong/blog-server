@@ -40,7 +40,10 @@ class UserController {
   }
 
   async login(ctx) {
-    const { name, email } = ctx.request.body;
+    let { name, email } = ctx.request.body;
+    if (!name || !email) {
+      name = ctx.state.qqname;
+    }
 
     try {
       const { password, ...res } = await getLoginUserInfo({ name, email });
@@ -316,11 +319,19 @@ class UserController {
         // 存在
         res2.token = jwt.sign(res2, JWT_SECRET, { expiresIn: '7d' });
 
-        ctx.body = {
-          code: 0,
-          message: '登录成功',
-          data: res2,
-        };
+        ctx.state.qqname = res2.name;
+
+        // ctx.render('login', {
+        //   code: 0,
+        //   message: '登录成功',
+        //   data: res2,
+        // });
+
+        // ctx.body = {
+        //   code: 0,
+        //   message: '登录成功',
+        //   data: res2,
+        // };
       } else {
         let { password, ...res1 } = await createUser(obj);
         /** 从这里到封装 都是改变我获取的用户信息存储到数据库里面，根据数据库的存储，创建新用户，如果有

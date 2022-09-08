@@ -48,7 +48,7 @@ router.post('/register', userValidator, verfyMailCode, verifyUserCreate, crpytPa
 router.post('/login', verifyLogin, login);
 
 // QQ登录
-router.get('/qqlogin', qqlogin);
+router.get('/qqlogin', qqlogin, login);
 
 // 修改用户信息接口{name/email/password/avatar..}
 router.put('/:id', auth, hadAdminPermission, verifyUser, updateUserInfomation);
