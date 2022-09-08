@@ -314,11 +314,7 @@ class UserController {
       console.log('存在res2:', res2);
       if (res2) {
         // 存在
-        res2.token = jwt.sign({
-          res2,
-          JWT_SECRET,
-          expiresIn: '7d',
-        });
+        res2.token = jwt.sign(res2, JWT_SECRET, { expiresIn: '7d' });
 
         ctx.body = {
           code: 0,
@@ -332,18 +328,17 @@ class UserController {
        * 用户我就查询并获取用户的id 然后返回给前端 用户的 id
        */
       console.log('createUser_item:', res1);
-      console.log('dataValues:', res1.dataValues);
+      console.log('dataValues内容:', res1.dataValues);
       let res = res1.dataValues;
       // 生成token
-      res.token = jwt.sign({
-        res,
-        JWT_SECRET,
-        expiresIn: '7d',
-      });
+      const token = jwt.sign(res, JWT_SECRET, { expiresIn: '7d' });
       ctx.body = {
         code: 0,
         message: '登录成功',
-        data: res,
+        data: {
+          ...res,
+          token,
+        },
       };
     } else {
       ctx.body = {
