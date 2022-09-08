@@ -327,17 +327,17 @@ class UserController {
       const res2 = await getUserInfoByName({ name: obj.name });
       console.log('存在res2:', res2);
       if (res2) {
-        // res2.token = jwt.sign(res2, JWT_SECRET, { expiresIn: '7d' });
         const qqtoken = jwt.sign(res2.dataValues, JWT_SECRET, { expiresIn: '7d' });
         console.log('res.id:', res2.id);
         ctx.redirect(`https://hdhblog.cn/home?token=${qqtoken}&qqid=${res2?.id}`);
       } else {
-        let { password, ...res1 } = await createUser(obj);
+        let res1 = await createUser(obj);
+
         console.log('createUser_item:', res1);
         console.log('dataValues内容:', res1.dataValues);
-        // 生成token
+
         const qqtoken = jwt.sign(res1.dataValues, JWT_SECRET, { expiresIn: '7d' });
-        ctx.redirect(`https://hdhblog.cn/about?token=${qqtoken}&qqid=${res1?.id}`);
+        ctx.redirect(`https://hdhblog.cn/about?token=${qqtoken}&qqid=${res1.dataValues.id}`);
       }
     }
   }
