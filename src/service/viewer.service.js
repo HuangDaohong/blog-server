@@ -12,11 +12,14 @@ class ViewerService {
         ip: ip
       }
     });
-    if (exist.ip === ip) {
+    console.log('@@@@@@@@@@');
+    console.log(exist?.ip);
+    console.log(ip);
+    if (exist?.ip === ip) {
       // 更新最新的一条数据的访问时间
       await Viewer.update(
         {
-          updatedAt: new Date(),
+          // updatedAt: new Date(),
           counts: exist.counts + 1,
         },
         {
