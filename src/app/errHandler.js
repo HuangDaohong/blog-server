@@ -14,6 +14,7 @@ module.exports = (err, ctx, errDetail) => {
       break;
     default:
       status = 403;
+      break;
   }
   ctx.status = status;
   ctx.body = err;

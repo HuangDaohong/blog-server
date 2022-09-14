@@ -197,7 +197,6 @@ class CommentService {
         id,
       },
     });
-    // TODO bug 如果文章不存在呢?
     const article = await Article.findOne({
       where: {
         id: comment.article_id,

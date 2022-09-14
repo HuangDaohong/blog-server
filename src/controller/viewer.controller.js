@@ -1,21 +1,29 @@
 const { createViewer, finAllViewers } = require('../service/viewer.service');
 const { visitorAddError, visitorGetError } = require('../constant/err.type');
 class ViewerController {
-  async add(ctx) {
+  async add (ctx) {
     try {
       const res = await createViewer(ctx.request.body);
-      ctx.body = {
-        code: 0,
-        message: 'success',
-        data: res,
-      };
+      if (res) {
+        ctx.body = {
+          code: 0,
+          message: 'success',
+          data: res,
+        };
+      } else {
+        ctx.body = {
+          code: 1,
+          message: 'fail',
+          data: '',
+        };
+      }
     } catch (err) {
       return ctx.app.emit('error', visitorAddError, ctx, err);
     }
   }
 
   // 分页获取列表
-  async finAll(ctx) {
+  async finAll (ctx) {
     const { pageNum = 1, pageSize = 10 } = ctx.request.query;
     try {
       const res = await finAllViewers(pageNum, pageSize);
