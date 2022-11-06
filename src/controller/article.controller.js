@@ -32,7 +32,7 @@ const { APP_PORT } = require('../config/config.default');
 
 class ArticleController {
   /** 新增文章 */
-  async add(ctx) {
+  async add (ctx) {
     console.log('##########', ctx.request.body);
     const user_id = ctx.state.user.id;
     const { tags = [] } = ctx.request.body;
@@ -66,7 +66,7 @@ class ArticleController {
   }
 
   /**一次获取全部文章 */
-  async getAll(ctx) {
+  async getAll (ctx) {
     try {
       const res = await getAllArticle();
       ctx.body = {
@@ -80,7 +80,7 @@ class ArticleController {
   }
 
   /**分页获取文章 */
-  async getAllByPage(ctx) {
+  async getAllByPage (ctx) {
     const { pageNum = 1, pageSize = 10, status, origin, weight, keyword } = ctx.request.query;
     let datefrom = null;
     let dateto = null;
@@ -120,7 +120,7 @@ class ArticleController {
     }
   }
   /**web 分页获取文章 */
-  async getAllByPage2(ctx) {
+  async getAllByPage2 (ctx) {
     const { pageNum = 1, pageSize = 10, weight, keyword, orderKey } = ctx.request.query;
     try {
       if (orderKey === 'recommend') {
@@ -144,7 +144,7 @@ class ArticleController {
   }
 
   /**web 随机获取推荐文章 */
-  async getRecommend(ctx) {
+  async getRecommend (ctx) {
     const { counts = 10 } = ctx.request.query;
     try {
       const res = await getRecommendByPage(counts);
@@ -160,7 +160,7 @@ class ArticleController {
   }
 
   /**根据文章id获取文章详情 */
-  async getByID(ctx) {
+  async getByID (ctx) {
     const { id } = ctx.params;
     console.log(id);
     try {
@@ -179,7 +179,7 @@ class ArticleController {
   }
 
   /**根据article_id获取文章详情*/
-  async getByArticleID(ctx) {
+  async getByArticleID (ctx) {
     const { article_id } = ctx.params;
     // console.log('######', article_id);
     try {
@@ -198,7 +198,7 @@ class ArticleController {
   }
 
   /**根据分类获取文章列表 */
-  async getAllByCategory(ctx) {
+  async getAllByCategory (ctx) {
     const { id } = ctx.params;
     const { pageNum = 1, pageSize = 7 } = ctx.request.query;
     try {
@@ -214,7 +214,7 @@ class ArticleController {
   }
 
   /**根据标签id获取文章列表 */
-  async getAllByTag(ctx) {
+  async getAllByTag (ctx) {
     const { id } = ctx.params;
     const { pageNum = 1, pageSize = 7 } = ctx.request.query;
     try {
@@ -230,7 +230,7 @@ class ArticleController {
   }
 
   /**根据关键字搜索文章列表 */
-  async getAllByKeyword(ctx) {
+  async getAllByKeyword (ctx) {
     const { keyword, pageNum = 1, pageSize = 10 } = ctx.request.body;
     try {
       const res = await getAllArticleByKeyword(keyword, pageNum, pageSize);
@@ -245,7 +245,7 @@ class ArticleController {
   }
 
   /**根据文章id删除文章 */
-  async deleteOneByID(ctx) {
+  async deleteOneByID (ctx) {
     const { id } = ctx.params;
     try {
       const res = await delArticleByID(id);
@@ -263,7 +263,7 @@ class ArticleController {
   }
 
   /**根据ids数组批量删除文章 */
-  async deleteManyByIDs(ctx) {
+  async deleteManyByIDs (ctx) {
     const { ids } = ctx.request.body;
     console.log('===============', ids);
     try {
@@ -282,7 +282,7 @@ class ArticleController {
   }
 
   /** 更新文章 */
-  async updateOneByID(ctx) {
+  async updateOneByID (ctx) {
     const { id } = ctx.params;
     const { tags } = ctx.request.body;
     const { category } = ctx.request.body;
@@ -308,7 +308,7 @@ class ArticleController {
   }
 
   /**文章访问量+1 */
-  async increaseViews(ctx) {
+  async increaseViews (ctx) {
     const { id } = ctx.params;
     try {
       await increaseViewsById(id);
@@ -323,7 +323,7 @@ class ArticleController {
   }
 
   /** 文章喜欢+1 */
-  async increaseLikes(ctx) {
+  async increaseLikes (ctx) {
     const { id } = ctx.params;
     try {
       await increaseLikesById(id);
@@ -338,7 +338,7 @@ class ArticleController {
   }
 
   /**上传文章背景图片 */
-  async uploadCover(ctx) {
+  async uploadCover (ctx) {
     const { avatar_Img } = ctx.request.files || {};
     const fileTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg', 'image/bmp', 'image/webp'];
     if (avatar_Img.size) {
@@ -360,7 +360,7 @@ class ArticleController {
   }
 
   /**上传文章内容图片 */
-  async uploadImgs(ctx) {
+  async uploadImgs (ctx) {
     const { uploadImg } = ctx.request.files || {};
     const fileTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg', 'image/bmp', 'image/webp'];
     if (uploadImg) {

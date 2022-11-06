@@ -2,12 +2,12 @@ const path = require('path');
 const Koa = require('koa2');
 const KoaBody = require('koa-body');
 const KoaStatic = require('koa-static');
-const parameter = require('koa-parameter');
+const parameter = require('koa-parameter');// 参数校验
 const cors = require('koa2-cors');
 const Moment = require('moment');
 const compress = require('koa-compress'); // 引入gzip压缩模块
 
-const Koa_Session = require('koa-session');
+const Koa_Session = require('koa-session'); // 引入session模块
 
 const Koa_Logger = require('koa-logger'); //只能打印一些请求的信息，并不会记录日志
 const errHandler = require('./errHandler');

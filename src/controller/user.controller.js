@@ -26,7 +26,7 @@ const { sendMail } = require('../config/sendEmail');
 const { JWT_SECRET } = require('../config/config.default');
 const { QQgetAccessToken, getOpenId, QQgetUserInfo } = require('../config/qq');
 class UserController {
-  async register(ctx) {
+  async register (ctx) {
     try {
       const res = await createUser(ctx.request.body);
       ctx.body = {
@@ -40,7 +40,7 @@ class UserController {
     }
   }
 
-  async login(ctx) {
+  async login (ctx) {
     const { name, email } = ctx.request.body;
     try {
       const { password, ...res } = await getLoginUserInfo({ name, email });
@@ -56,7 +56,7 @@ class UserController {
   }
 
   // 修改用户信息 ,修改之后客户端应重新登录
-  async updateUserInfomation(ctx, next) {
+  async updateUserInfomation (ctx, next) {
     const { id } = ctx.params;
     if (await updateById(id, ctx.request.body)) {
       ctx.body = {
@@ -74,7 +74,7 @@ class UserController {
   }
 
   // 修改密码
-  async updateUserPassword(ctx) {
+  async updateUserPassword (ctx) {
     const { id } = ctx.params;
     try {
       if (await updateById(id, ctx.request.body)) {
@@ -95,7 +95,7 @@ class UserController {
     }
   }
   // 用户上传头像接口
-  async uploadAvatar(ctx) {
+  async uploadAvatar (ctx) {
     // const { id } = ctx.state.user;
     const { avatar_Img } = ctx.request.files || {};
 
@@ -139,7 +139,7 @@ class UserController {
   }
 
   // 管理员删除用户
-  async deleteUser(ctx, next) {
+  async deleteUser (ctx, next) {
     const { id } = ctx.params;
     if (await deleteById({ id })) {
       ctx.body = {
@@ -157,7 +157,7 @@ class UserController {
   }
 
   // 禁言某用户
-  async disableusercomment(ctx) {
+  async disableusercomment (ctx) {
     const { id } = ctx.request.body;
     if (await updateById({ id, disabledDiscuss: 1 })) {
       ctx.body = {
@@ -175,7 +175,7 @@ class UserController {
   }
 
   // 获取用户详细信息
-  async getUserInfo(ctx) {
+  async getUserInfo (ctx) {
     const { id } = ctx.request.body;
     try {
       const { password, ...res } = await getUserInfo({ id });
@@ -189,7 +189,7 @@ class UserController {
     }
   }
 
-  async getUserInfoByID(ctx) {
+  async getUserInfoByID (ctx) {
     const { id } = ctx.request.query;
     try {
       const res = await getUserInfoByID({ id });
@@ -204,7 +204,7 @@ class UserController {
   }
 
   // 获取用户列表
-  async getUserList(ctx) {
+  async getUserList (ctx) {
     let res = await getUserList();
     if (res) {
       ctx.body = {
@@ -222,7 +222,7 @@ class UserController {
   }
 
   // 获取用户列表 分页
-  async getUserListByPage(ctx) {
+  async getUserListByPage (ctx) {
     let { pageNum = 1, pageSize = 10 } = ctx.request.query;
     let res = await getUserListPage({ pageNum, pageSize });
     if (res) {
@@ -240,7 +240,7 @@ class UserController {
     }
   }
 
-  async getEmailCode(ctx) {
+  async getEmailCode (ctx) {
     const { email } = ctx.request.body;
     const code = Math.random().toString().slice(-6);
     // 在会话中添加验证码字段code
@@ -295,19 +295,19 @@ class UserController {
   // }
 
   // QQ登录
-  async qqlogin(ctx) {
+  async qqlogin (ctx) {
     const { code } = ctx.request.query;
     console.log('code', code); //点击点击“登录”，网站回调域 就会收到的腾讯服务器所发起的回调。请求 ：回调地址/GET /code=F91C6110********
     let userinfo;
     let openid;
     if (code) {
       let token = await QQgetAccessToken(code); // 获取 Access Token 函数 返回 token 并存储
-      console.log('返回的token', token);
+      // console.log('返回的token', token);
       openid = await getOpenId(token); // 获取 Openid 函数 返回 Openid 并存储
-      console.log('返回的openid', openid);
+      // console.log('返回的openid', openid);
       if (openid && token) {
         userinfo = await QQgetUserInfo(token, openid); // 如果都获取到了，获取用户信息
-        console.log('返回的结果', userinfo);
+        // console.log('返回的结果', userinfo);
       }
     }
     // 封装：
@@ -321,11 +321,11 @@ class UserController {
         // year: userinfo.year,
         avatar: userinfo.figureurl_qq_2 ? userinfo.figureurl_qq_2 : userinfo.figureurl_qq_1,
       };
-      console.log('封装的obj', obj);
+      // console.log('封装的obj', obj);
 
       // 判断是否存在
       const res2 = await getUserInfoByName({ name: obj.name });
-      console.log('存在res2:', res2);
+      // console.log('存在res2:', res2);
       if (res2) {
         const qqtoken = jwt.sign(res2.dataValues, JWT_SECRET, { expiresIn: '7d' });
         console.log('res.id:', res2.id);
@@ -333,8 +333,8 @@ class UserController {
       } else {
         let res1 = await createUser(obj);
 
-        console.log('createUser_item:', res1);
-        console.log('dataValues内容:', res1.dataValues);
+        // console.log('createUser_item:', res1);
+        // console.log('dataValues内容:', res1.dataValues);
 
         const qqtoken = jwt.sign(res1.dataValues, JWT_SECRET, { expiresIn: '7d' });
         ctx.redirect(`https://hdhblog.cn/home?token=${qqtoken}&qqid=${res1.dataValues.id}`);

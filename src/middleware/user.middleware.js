@@ -100,7 +100,7 @@ const verifyPass = async (ctx, next) => {
       ctx.app.emit('error', userDoesNotExist, ctx);
       return;
     }
-    if (!bcrypt.compareSync(password, res.password)) {
+    if (!bcrypt.compareSync(password, res.password)) { // 密码是否匹配(不匹配: 报错),compareSync的第一个参数是明文，第二个参数是密文
       ctx.app.emit('error', invalidOldPassword, ctx);
       return;
     }
