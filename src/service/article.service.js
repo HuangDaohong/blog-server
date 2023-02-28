@@ -6,13 +6,13 @@ const seq = require('../db/seq');
 const { Op, QueryTypes } = require('sequelize');
 class ArticleService {
   // 新增文章
-  async createArticle(article) {
+  async createArticle (article) {
     console.log('新增文章', '--------------');
     return await Article.create(article);
   }
 
   // 添加文章id和标签id到文章标签表
-  async createArticleTag({ article_id, tag_ids }) {
+  async createArticleTag ({ article_id, tag_ids }) {
     // 先删除原有的标签
     await ArticeTag.destroy({ where: { article_id } });
     const arr = tag_ids.map((tag_id) => ({ article_id, tag_id }));
@@ -20,12 +20,12 @@ class ArticleService {
   }
 
   // 根据id删除文章
-  async delArticleByID(articleID) {
+  async delArticleByID (articleID) {
     return await Article.destroy({ where: { id: articleID } });
   }
 
   // 获取全部文章
-  async getAllArticle() {
+  async getAllArticle () {
     // 原始查询语句
     // return await seq.query(
     //   'SELECT a.*,c.name as category_name from tb_article as a LEFT JOIN tb_category as c ON a.category_id=c.id',
@@ -56,7 +56,7 @@ class ArticleService {
   }
 
   /**分页获取文章 */
-  async getAllArticleByPage(pageNum, pageSize, status, origin, weight, keyword, datefrom, dateto) {
+  async getAllArticleByPage (pageNum, pageSize, status, origin, weight, keyword, datefrom, dateto) {
     let datewhere = null;
     if (datefrom !== null && dateto !== null) {
       datewhere = {
@@ -117,7 +117,7 @@ class ArticleService {
     };
   }
   /** web  分页获取文章 */
-  async getAllArticleByPage2(pageNum, pageSize, weight, keyword, orderKey) {
+  async getAllArticleByPage2 (pageNum, pageSize, weight, keyword, orderKey) {
     const { count, rows } = await Article.findAndCountAll({
       attributes: { exclude: ['content', 'id'] }, //不包括deletedAt字段
       include: [
@@ -140,6 +140,7 @@ class ArticleService {
         [Op.or]: [
           { title: keyword ? { [Op.like]: `%${keyword}%` } : { [Op.ne]: null } },
           { subtitle: keyword ? { [Op.like]: `%${keyword}%` } : { [Op.ne]: null } },
+          { content: keyword ? { [Op.like]: `%${keyword}%` } : { [Op.ne]: null } },
         ],
       },
       distinct: true, //去重,它返回的 count 不会把你的 include 的数量算进去
@@ -155,7 +156,7 @@ class ArticleService {
     };
   }
   /** web  首页获取随机推荐的文章 */
-  async getAllArticleByPageRecommend(pageNum, pageSize) {
+  async getAllArticleByPageRecommend (pageNum, pageSize) {
     const { count, rows } = await Article.findAndCountAll({
       attributes: { exclude: ['content', 'id'] }, //不包括deletedAt字段
       include: [
@@ -188,7 +189,7 @@ class ArticleService {
   }
 
   /* web 随机获取推荐文章 */
-  async getRecommendByPage(counts) {
+  async getRecommendByPage (counts) {
     const { count, rows } = await Article.findAndCountAll({
       attributes: { exclude: ['content', 'id'] }, //不包括deletedAt字段
       where: {
@@ -207,7 +208,7 @@ class ArticleService {
   }
 
   // 根据文章id获取文章,文章访问量+1
-  async getArticleByID(articleID) {
+  async getArticleByID (articleID) {
     const res = await Article.findOne({
       include: [
         {
@@ -237,7 +238,7 @@ class ArticleService {
   }
 
   // 根据article_id获取文章,文章访问量+1
-  async getArticleByArticleID(articleID) {
+  async getArticleByArticleID (articleID) {
     // console.log('articleID:@@@@@@@@', articleID);
     const res = await Article.findOne({
       exclude: ['id', 'createdAt', 'status'],
@@ -250,7 +251,7 @@ class ArticleService {
         {
           model: Tag,
           attributes: ['id', 'name', 'color'],
-          through: { attributes: [] },
+          through: { attributes: [] },// 不包括中间表的字段
         },
       ],
       where: {
@@ -266,7 +267,7 @@ class ArticleService {
   }
 
   // 根据分类id获取文章
-  async getAllArticleByCategor(categoryID, pageNum, pageSize) {
+  async getAllArticleByCategor (categoryID, pageNum, pageSize) {
     const { count, rows } = await Article.findAndCountAll({
       // attributes: { exclude: ['deletedAt', 'content'] }, //不包括deletedAt字段
       attributes: ['id', 'title', 'createdAt', 'article_id'],
@@ -328,7 +329,7 @@ class ArticleService {
   // }
 
   // 根据标签id获取文章第二种方法
-  async getAllArticleByTag(tagID, pageNum, pageSize) {
+  async getAllArticleByTag (tagID, pageNum, pageSize) {
     const { count, rows } = await Article.findAndCountAll({
       attributes: ['id', 'title', 'createdAt', 'article_id'],
       include: [
@@ -357,7 +358,7 @@ class ArticleService {
     };
   }
   // 根据关键字获取文章列表
-  async getAllArticleByKeyword(keyword, pageNum, pageSize) {
+  async getAllArticleByKeyword (keyword, pageNum, pageSize) {
     let keywordWhere = null;
     if (keyword) {
       if (keyword.length > 10) {
@@ -407,12 +408,12 @@ class ArticleService {
   }
 
   // 批量删除文章
-  async delArticleByIDs(articleIDs) {
+  async delArticleByIDs (articleIDs) {
     return await Article.destroy({ where: { id: articleIDs } });
   }
 
   // 更新文章
-  async updateArticleByID(articleID, articleInfo) {
+  async updateArticleByID (articleID, articleInfo) {
     const { title } = articleInfo;
     if (title) {
       const isExist = await Article.findOne({
@@ -431,12 +432,12 @@ class ArticleService {
   }
 
   // 增加文章访问量
-  async increaseViewsById(articleID) {
+  async increaseViewsById (articleID) {
     return await Article.increment('views', { by: 1, where: { id: articleID } });
   }
 
   // 文章点赞加1
-  async increaseLikesById(articleID) {
+  async increaseLikesById (articleID) {
     return await Article.increment('likes', { by: 1, where: { article_id: articleID } });
   }
 }

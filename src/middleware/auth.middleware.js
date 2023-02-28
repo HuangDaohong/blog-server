@@ -18,7 +18,7 @@ const auth = async (ctx, next) => {
     }
     // 鉴权
     const user = jwt.verify(token, JWT_SECRET);
-    ctx.state.user = user;
+    ctx.state.user = user;// 将用户信息存储到ctx.state中，方便后续中间件获取
   } catch (err) {
     switch (err.name) {
       case 'TokenExpiredError':
@@ -27,6 +27,7 @@ const auth = async (ctx, next) => {
       case 'JsonWebTokenError':
         console.error('无效的token', err);
         return ctx.app.emit('error', invalidToken, ctx);
+      // a：ctx.app.emit('error', err, ctx)的作用是触发error事件，然后在app.js中监听error事件，然后执行errHandler.js中的errHandler函数
       default:
         console.error('未知错误', err);
         return ctx.app.emit('error', UNKNOWN_ERROR, ctx);

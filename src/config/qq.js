@@ -1,5 +1,5 @@
 const axios = require('axios');
-async function QQgetAccessToken(code) {
+async function QQgetAccessToken (code) {
   let result;
   let appId = '101972085';
   let appKey = 'd8ded098fdeceed4bf48658f7f5e8ed2';
@@ -28,10 +28,8 @@ async function QQgetAccessToken(code) {
  * @param {string} accessToken token 令牌
  * @returns
  */
-async function getOpenId(accessToken) {
+async function getOpenId (accessToken) {
   let result;
-
-  // 跟上面差不多就不解释了
   await axios({
     url: `https://graph.qq.com/oauth2.0/me?access_token=${accessToken}&fmt=json`,
     method: 'GET',
@@ -53,7 +51,7 @@ async function getOpenId(accessToken) {
  * @param {string} openid
  * @returns
  */
-async function QQgetUserInfo(token, openid) {
+async function QQgetUserInfo (token, openid) {
   let result;
   await axios({
     url: `https://graph.qq.com/user/get_user_info?access_token=${token}&oauth_consumer_key=101972085&openid=${openid}`,

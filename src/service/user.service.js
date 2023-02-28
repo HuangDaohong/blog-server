@@ -3,13 +3,13 @@ const User = require('../model/user.model');
 // const seq = require('../db/seq');
 class UserService {
   // 插入数据
-  async createUser(user) {
+  async createUser (user) {
     const res = await User.create(user);
     return await res.save();
   }
 
   // 查询数据
-  async getUserInfo({ id, name, email }) {
+  async getUserInfo ({ id, name, email }) {
     const res = await User.findOne({
       // 根据name或者email查询，不包括此id
       where: {
@@ -22,7 +22,7 @@ class UserService {
     return res;
   }
   y;
-  async getUserInfoByName({ name }) {
+  async getUserInfoByName ({ name }) {
     const res = await User.findOne({
       where: {
         name,
@@ -32,7 +32,7 @@ class UserService {
   }
 
   // 通过id查询数据
-  async getUserInfoByID({ id }) {
+  async getUserInfoByID ({ id }) {
     const res = await User.findOne({
       where: {
         id,
@@ -42,7 +42,7 @@ class UserService {
   }
 
   // username或者email查询用户
-  async getLoginUserInfo({ name }) {
+  async getLoginUserInfo ({ name }) {
     const res = await User.findOne({
       where: {
         [Op.or]: [{ name }, { email: name }],
@@ -54,14 +54,14 @@ class UserService {
     return res ? res.dataValues : null;
   }
 
-  async getLoginUserInfo2({ name, email }) {
+  async getLoginUserInfo2 ({ name, email }) {
     const whereOpt = [];
     name && whereOpt.push({ name });
     email && whereOpt.push({ email });
     const res = await User.findOne({
       where: {
         [Op.or]: whereOpt,
-        disabledDiscuss: {
+        disabledDiscuss: {// 0表示可以评论
           [Op.eq]: 0,
         },
       },
@@ -70,7 +70,7 @@ class UserService {
   }
 
   // 修改数据
-  async updateById(id, user) {
+  async updateById (id, user) {
     // const whereOpt = { id };
     // const newUser = {};
     // name && Object.assign(newUser, { name });
@@ -85,21 +85,21 @@ class UserService {
   }
 
   // 删除数据
-  async deleteById({ id }) {
+  async deleteById ({ id }) {
     const res = await User.destroy({ where: { id } });
     return res > 0 ? true : false;
   }
 
   // 获取用户列表
-  async getUserList() {
+  async getUserList () {
     const res = await User.findAndCountAll({
       attributes: ['id', 'name', 'email', 'avatar', 'createdAt', 'updatedAt', 'role', 'ip', 'disabledDiscuss'],
     });
     return res;
   }
 
-  // 获取用户列表 分页
-  async getUserListPage({ pageNum, pageSize }) {
+  // 获取用户列表 分页 
+  async getUserListPage ({ pageNum, pageSize }) {
     const { count, rows } = await User.findAndCountAll({
       attributes: ['id', 'name', 'email', 'avatar', 'createdAt', 'updatedAt', 'role', 'ip', 'disabledDiscuss'],
       offset: (pageNum - 1) * pageSize,
